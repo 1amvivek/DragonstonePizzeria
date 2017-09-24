@@ -3,10 +3,10 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
 
   
 # Agile Values (see Wiki for more)
-[Arun -- Feedback](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Feedback)
+[Arun -- Feedback](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Feedback)  
 [Pranav -- Courage](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Courage)  
-[Raksha 	-- Communication](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Communication)
-Renu 	-- Commitment  
+[Raksha 	-- Communication](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Communication)  
+[Renu 	-- Commitment](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Commitment)  
 [Vivek 	-- Respect](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Respect)
 
   
