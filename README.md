@@ -7,7 +7,7 @@ Arun 	-- Feedback
 [Pranav -- Courage](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Courage)  
 Raksha 	-- Communication  
 Renu 	-- Commitment  
-Vivek 	-- Respect
+[Vivek 	-- Respect](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Respect)
 
   
 # Kanban Flow Diagram
