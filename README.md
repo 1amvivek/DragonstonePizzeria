@@ -4,11 +4,11 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
   
 # Agile Values (see Wiki for more)
 Arun 	-- Feedback  
-Pranav 	-- Courage  
+[Pranav -- Courage](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Courage)  
 Raksha 	-- Communication  
 Renu 	-- Commitment  
 Vivek 	-- Respect
 
   
 # Kanban Flow Diagram
-https://docs.google.com/spreadsheets/d/1tjzxWAlYaej3zB1PyV0gQtKUqj9LLXnQ6AwsjMwqWHs/edit?ts=59c6b449#gid=2
+[Google Sheet](https://docs.google.com/spreadsheets/d/1tjzxWAlYaej3zB1PyV0gQtKUqj9LLXnQ6AwsjMwqWHs/edit?ts=59c6b449#gid=2)
