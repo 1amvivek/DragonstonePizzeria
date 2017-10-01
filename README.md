@@ -10,5 +10,8 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
 [Vivek 	-- Respect](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Respect)
 
   
+# Project Research (see Wiki for more)
+[Pranav - AWS Lambda](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Project-Research-AWS-Lambda)
+
 # Kanban Flow Diagram
 [Google Sheet](https://docs.google.com/spreadsheets/d/1tjzxWAlYaej3zB1PyV0gQtKUqj9LLXnQ6AwsjMwqWHs/edit?ts=59c6b449#gid=2)
