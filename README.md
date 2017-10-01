@@ -14,7 +14,7 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
 [Pranav - AWS Lambda](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Project-Research-AWS-Lambda)  
 [Renu - Go & AWS Lambda](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/Project-Research-Implementing-Go-framework-for-lambda-and-its-advantages.md)  
 [Vivek - MongoDB](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Project-Research---MongoDB)  
-[Arun - Front End](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/Front%20End%20Research.md)
+[Arun - Front End](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/Front%20End%20Research.md)  
 [Raksha - API Gateway](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/AWS%20API%20Gateway.md)
 
 # Kanban Flow Diagram
