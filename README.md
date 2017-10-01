@@ -6,7 +6,7 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
 [Arun -- Feedback](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Core%20Values/Feedback.md)  
 [Pranav -- Courage](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Courage)  
 [Raksha 	-- Communication](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Core%20Values/Agile-Core-Value-Communication.md)  
-[Renu 	-- Commitment](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Commitment)  
+[Renu 	-- Commitment](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Core%20Values/Agile-Core-Value-Commitment.md)  
 [Vivek 	-- Respect](https://github.com/nguyensjsu/cmpe281-brogrammers/wiki/Agile-Core-Value-Respect)
 
   
