@@ -32,6 +32,37 @@ Go offers a solid toolchain and set of primitives to write AWS Lambda services. 
 - Cross-platform compilation
 - Rich standard library
 
+# AWS Serverless Architecture | Lambda + Go+ API Gateway
+
+## Why Serverless?  
+
+- <b>Move fast, innovate:</b> Focus on application logic, not on infrastructure.  
+- <b>Cost Savings:</b> Save on devops resources. Pay for exactly the number of requests and invocations needed.  
+- <b>Scale without worry:</b> No additional capacity needs provisioning to handle your workload at peak. During lulls in activity costs are proportional to usage.
+
+## Serverless Architecture
+
+The first thing to understand about serverless architecture is that it's not about the absence of server. What it means is that as a developer you are not concerned with server. You provide a code piece to an environment and it will be executed and results will be returned to you. You are just responsible for providing the code piece and generally the code piece has to adhere to some contract, so that the execution environment can understand it. AWS Lambda is an example of serverless architecture.  
+
+Serverless architecture is important from the perspective that it saves the developers from dealing with servers and in dealing with deployments. Write code, load it in execution environment and run it. This helps developers in focusing on the core stuff than on other aspects of development.
+
+
+## go-lambda
+
+go-lambda is a multi-purpose tool for creating and managing AWS Lambda instances backed by arbitrary Go code. Since there is no official support of Go, this tool automatically generates a wrappig module in Python 2.7 which is able to pass data back and forth to the Go land.
+
+Features at glance:
+
+<10ms startup time, feels like native experience;
+Resulting source.zip size is only 1.0M and in most cases has 2 files;
+Easy to use: start writing your own lambdas in Go just in few minutes;
+Relies on the official AWS SDK for Go while making all the requests, security is guaranteed;
+No any boilerplate or "all-in-one" aims: the tool is made to do its job and nothing else. 
+Installation
+
+$ go get github.com/xlab/go-lambd
+
+
 # References
 
 [https://www.pluralsight.com/blog/software-development/golang-get-started](https://www.pluralsight.com/blog/software-development/golang-get-started)
