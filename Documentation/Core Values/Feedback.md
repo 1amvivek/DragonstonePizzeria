@@ -20,3 +20,9 @@ Highest business value features are delivered first to the customer by developme
 * Following the discussions from week 1 about implementing AWS Lambda in our project, positive feedbacks were given by the team members about implementation part and the advantages of having a serverless architecture finally resulted in incorporating Lambda into our system architecture.
 * feedbacks to implement MongoDB database helped us to take a very quick decision on the technology stack for our application when we were very confused.
 * One more example where feedback system continues to successfully help us reach project goals is when we were not sure, whether we can or should achieve front end consistency in our application. One of our team members dropped in a idea based on his own experience for implementing web sockets using Node.js to achieve front-end consistency. This further helped in improving our system architecture.
+
+**Updates from week 3**  
+
+* feedbacks were given to form groups in communication platforms to discuss efficiently about the achievements and problems faced by the team members.
+* feedbacks about the time constraints that each member has was taken into account and the team was ready to help each other with the tasks.  
+* Team members gave their opinions about the new technologies that they learnt in the silicon valley code camp and gave feedbacks about the technologies that can be used for the betterment of the project.
