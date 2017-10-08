@@ -40,3 +40,25 @@ Websockets connections can both send data to the browser and receive data from t
 *	No built-in support for re-connection
 
 Based on this research and analysing the pros and cons of each, we have decided to go with the websockets for this project to achieve real time multi user shopping cart.
+
+**USING NODE JS FOR REAL TIME COMMUNICATION**  
+
+Socket.IO package in node js helps in achiveing concurrency between all the clients connected.
+
+Socket.IO enables real-time event-based communication between one or more clients and a server. It works on every platform, browser or device and is fast and reliable. It's often used in analytics, document collaboration, streaming and instant messaging.
+
+Socket.IO is smart, it uses WebSockets if available. If not it fails over to something the browser does support. It also supports auto reconnection and disconnection detection. It has cross browser support and is available in almost all of the browsers. Socket.IO works mostly by the means of Node.js events: you can listen for a connection event, fire up a function when a new user connects to the server, emit a message (basically an event) over a socket, and much more. 
+
+**Reliability**
+
+Connections are established even in the presence of: 
+
+* proxies and load balancers.
+* personal firewall and antivirus software.
+
+**Requirements**
+
+* Express 4
+* Socket.IO 1.7.2
+
+
