@@ -34,6 +34,11 @@ Here, courage was demonstrated in the following instances:
   
   
   
+## Courage shown in Week 3
+* At the Silicon Valley Code Camp session on "AWS Lambda" and "Good-bye VM, Hello Docker", keeping with the Agile value of Courage, we asked the instructor on various means of deploying Go code to AWS Lambda and discussed the Pros and Cons of the approach.
+* In a display of Courage, I asked the TA's for CMPE 281 class for help configuring the required settings in order to set up a CICD pipeline to Heroku as this requires Admin privileges to the Repository.
+  
+  
   
 ## References
 * [Agie Manifesto Principles](http://agilemanifesto.org/principles.html)
