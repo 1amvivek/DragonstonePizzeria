@@ -28,3 +28,22 @@ API Gateway lets us create, configure, and host a RESTful API to enable applicat
 2. Easily Monitor API Activity
 3. Create RESTful Endpoints for Existing Services
 4. Run APIs Without Servers with AWS Lambda
+
+## Getting Started with Amazon API Gateway having Lambda integration
+### Overview of Lambda Proxy integration
+* The Lambda proxy integration allows the client to call a single Lambda function in the backend. The function accesses many resources or features of other AWS services such as EC2 or S3, including calling other Lambda functions.
+* When a client submits an API request, API Gateway passes to the integrated Lambda function the raw request as-is along with the request data containing request headers, query string parameters, URL path variables, payload, and API configuration data.
+* The backend Lambda function being called parses the incoming request data to determine the response that it has to return to the client.
+* The integrated Lambda function initially verifies all of the input sources before processing the request and responding to the client with meaningful error messages if any of the required input is missing.
+
+### Setting up API Gateway Proxy Integration
+The following three tasks need to be performed:
+* Create a proxy resource with a greedy path variable of {proxy+}. This path parameter represents any of the child resources under its parent resource of an API. In other words, /parent/{proxy+} can stand for any resource matching the path pattern of "/parent/*".
+* A special method, named ANY, used to define the same integration set up for all supported methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, and PUT.
+* Integrate the resource and method with a backend using the HTTP or Lambda integration type.
+   * The HTTP proxy integration, designated by HTTP_PROXY in the API Gateway REST API, is for integrating a method request with a backend HTTP endpoint.
+   * The Lambda proxy integration, designated by AWS_PROXY in the API Gateway REST API, is for integrating a method request with a Lambda function in the backend.
+
+## Reference:
+http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy.html
+http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html
