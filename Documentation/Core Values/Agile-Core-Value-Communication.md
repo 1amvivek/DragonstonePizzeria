@@ -44,5 +44,15 @@ In Week 2 of the development process:
 
 * The team also discussed the tasks to be done for the upcoming week making sure nobody has a problem with their schedules.
 
+## Updates from Week 3
+In Week 3 of the development process:
+* The team had a weekly scrum meeting to discuss about the progress made by each team member.
+
+* The team also discussed the difficulties that each member is facing regarding time constraints due to other courses' work load.
+
+* The team also discussed the tasks to be done for the upcoming week making sure the tasks fit in with everyone's schedule. 
+
+* We have formed groups in multiple Internet based communication services for ease of discussions, to constantly understand the problems being faced by all the members and trying to resolve the issues together, as a team.
+
 ## References:
 * [Agile Manifesto Principles](http://agilemanifesto.org/principles.html)
