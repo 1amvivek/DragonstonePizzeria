@@ -15,3 +15,9 @@ The core agile value of respect is shown in the following instances during week 
 * During the team discussion on 30 September, everyone was given a chance to give their views in developing the architecture of the project. This is a clear indicator of respect shown towards team's opinions.
 
 * After a short discussion with Prof. Paul, the team reconsidered to use AWS Lamba for the project. Waiting for the professor's consent in using AWS Lambda shows the respect shown towards the professor by the team.
+
+## Respect shown in Week 3
+
+* Several considerations regarding how to use AWS lambda in the project were considered by giving mutual respect to team-mates opinions.
+
+* The team was open to help each other in completing their tasks at hand as they were busy in completing other course's assignments. This shows mutual respect to one's situation shown by the team.
