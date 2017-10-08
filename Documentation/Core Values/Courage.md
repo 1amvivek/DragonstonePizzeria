@@ -30,7 +30,7 @@ Here, courage was demonstrated in the following instances:
   
 ## Courage shown in Week 2
 * As per discussions following week 1, it was decided that AWS Lambda will not be used. However, on doing further research on the topic, it seemed like a perfect solution to a vast majority of the problems associated with scaling and **in keeping with values of courage, a second discussion with Professor Paul ensued which resulted in AWS Lambda being back in consideration.**
-* Team brogrammers as a unit **displayed courage in the team meeting while proposing various architectural decisions** like using Angular and Node for the front end in order to maintain consistency at the user's end and attempting to make AWS Lambdas with Go in spite of having no experience with the language apart from CMPE 281 class.
+* Team brogrammers as a unit **displayed courage in the team meeting while proposing various architectural decisions** like using Angular and Node for the front end in order to maintain consistency at the user's end and attempting to make AWS Lambdas with Go in spite of having no experience with the language apart from CMPE 281 class.  
   
   
   
@@ -40,6 +40,9 @@ Here, courage was demonstrated in the following instances:
   
   
   
+  
+  
+   
 ## References
 * [Agie Manifesto Principles](http://agilemanifesto.org/principles.html)
 

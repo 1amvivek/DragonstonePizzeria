@@ -12,6 +12,7 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
   
 # Project Research (see Wiki for more)
 [Pranav - AWS Lambda](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/AWS%20Lambda.md)  
+[Pranav - CICD Pipeline](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/Project-Research-CICD-Pipeline.md)  
 [Renu - Go & AWS Lambda](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/Project-Research-Implementing-Go-framework-for-lambda-and-its-advantages.md)  
 [Vivek - MongoDB](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/MongoDB.md)  
 [Arun - Front End](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/Front%20End%20Research.md)  
