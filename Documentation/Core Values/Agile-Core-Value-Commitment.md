@@ -29,9 +29,11 @@ The following are the core agile value of Commitment noticed in Week 2 of develo
 
 The following are the core agile value of Commitment noticed in Week 3 of development:
 
-* In the week 3 of development and project discussions, every team member like promised in the previous meeting have completed a small demo implementation in their particular domain, which further proves how commitment plays a major role in team sucess.
+* In the week 3 of development and project discussions, every team member like they promised in the previous week 2 meeting have completed a small demo implementation in their particular domain, which further proves how commitment plays a major role in team sucess.
 
-* Further, every team member attended some major sessions in Silicon Valley Code Camp, like how to use AWs with Serverless Lambda and Java, etc. All five memebers in our team attended multiple sessions , so that each team member can incorporate the knowledge absorbed from these sessions into the project. This again shows the commitment and efforts taken by each member to work towards our team goals.
+* Further, every team member attended some major sessions in Silicon Valley Code Camp, like how to use AWs with Serverless Lambda and Java, etc. All five memebers in our team attended multiple sessions , so that each team member can incorporate the knowledge absorbed from these sessions into the project. This again shows the commitment and efforts taken by each member to work towards the team goals.
+
+
 
 
 
