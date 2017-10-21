@@ -62,14 +62,7 @@ Installation
 
 $ go get github.com/xlab/go-lambd
 
-
-# References
-
-[https://www.pluralsight.com/blog/software-development/golang-get-started](https://www.pluralsight.com/blog/software-development/golang-get-started)
-
-[https://thenewstack.io/a-closer-look-at-golang-from-an-architects-perspective/](https://thenewstack.io/a-closer-look-at-golang-from-an-architects-perspective/)
-
-## Implementing MongoDB in Golang
+## Connecting MongoDB with Golang
 
 The Golang driver for MongoDB is called mgo. Using Apex to create a function that connects to Compose's MongoDB is almost as straightforward as the simpleGo function which we have been reviewing. 
 MongoDB is a document datastore. Rather than storing spreadsheet like tables (columns and rows), it’s more like a set of folders (or buckets) into which JSON files (documents) can be put, then queried.
@@ -80,7 +73,7 @@ Connects to MongoDB
 Inserts some comments data
 Reads that comments data
 
-#Starting MongoDB
+## Starting MongoDB
 
 Before we get started, be sure to:
 - Install MongoDB  
@@ -91,7 +84,18 @@ mongod --dbpath=”./db”
 
 You should see some output including something like the line: “waiting for connections on port 27017” — then we know we’re good to go.
 
+## Interacting with data
+Now that the structure for our program is in place, we are ready to write the two handlers that will actually interact with MongoDB to do the work for us.
+
+## Inserting data
+Now we will write our `handleInsert` function that will take the data from an http.Request, and insert it into the database. We’re going to decode the request body manually here, but you might want to consider some patterns for decoding and validating input. Once we’ve decided the comment data, we’ll set the time and a give it a unique ID before inserting it into the database. Finally, we’ll redirect the user to a path that uniquely describes the new comment.
 
 
 
+
+# References
+
+[https://www.pluralsight.com/blog/software-development/golang-get-started](https://www.pluralsight.com/blog/software-development/golang-get-started)
+
+[https://thenewstack.io/a-closer-look-at-golang-from-an-architects-perspective/](https://thenewstack.io/a-closer-look-at-golang-from-an-architects-perspective/)
 
