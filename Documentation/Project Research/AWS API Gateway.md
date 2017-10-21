@@ -43,6 +43,22 @@ The following three tasks need to be performed:
 * Integrate the resource and method with a backend using the HTTP or Lambda integration type.
    * The HTTP proxy integration, designated by HTTP_PROXY in the API Gateway REST API, is for integrating a method request with a backend HTTP endpoint.
    * The Lambda proxy integration, designated by AWS_PROXY in the API Gateway REST API, is for integrating a method request with a Lambda function in the backend.
+   
+## Testing an API
+1. Test a Method with the API Gateway Console
+    * After the creation of the APIs, click on the "Test" option in the "Method Execution" pane.
+        * The following information will be displayed:
+           * "Request" is the resource's path that was called for the method.
+           * "Status" is the response's HTTP status code.
+           * "Latency" is the time between the receipt of the request from the caller and the returned response.
+           * "Response Body" is the HTTP response body.
+           * "Response Headers" are the HTTP response headers.
+           * "Logs" are the simulated Amazon CloudWatch Logs entries that would have been written if this method were called outside of the API Gateway console.
+           
+2. Use Postman to Call an API
+   * Enter the endpoint URL of a request in the address bar and choose the appropriate HTTP method from the drop-down list to the left of the address bar.
+   * If required, provide the appropriate Authorization using AWS credentials.
+   * Click on Send to test the API.
 
 ## Reference:
 http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy.html
