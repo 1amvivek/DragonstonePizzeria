@@ -69,6 +69,28 @@ $ go get github.com/xlab/go-lambd
 
 [https://thenewstack.io/a-closer-look-at-golang-from-an-architects-perspective/](https://thenewstack.io/a-closer-look-at-golang-from-an-architects-perspective/)
 
+## Implementing MongoDB in Golang
+
+The Golang driver for MongoDB is called mgo. Using Apex to create a function that connects to Compose's MongoDB is almost as straightforward as the simpleGo function which we have been reviewing. 
+MongoDB is a document datastore. Rather than storing spreadsheet like tables (columns and rows), it’s more like a set of folders (or buckets) into which JSON files (documents) can be put, then queried.
+
+In this section, we’ll write a simple comments API in Go that:
+
+Connects to MongoDB
+Inserts some comments data
+Reads that comments data
+
+#Starting MongoDB
+
+Before we get started, be sure to:
+- Install MongoDB  
+- Get the mgo package — a ‘driver’ that will let us interact with MongoDB  
+- Create a new folder called `commentsapp` — this is where our Go code will live. Inside that, create a subfolder called `db` which is where we’ll ask MongoDB to keep the data.  
+- Start MongoDB by running the following in a command terminal after navigating to the `commentsapp` folder:
+mongod --dbpath=”./db”
+
+You should see some output including something like the line: “waiting for connections on port 27017” — then we know we’re good to go.
+
 
 
 
