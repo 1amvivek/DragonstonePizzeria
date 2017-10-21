@@ -33,6 +33,14 @@ The following are the core agile value of Commitment noticed in Week 3 of develo
 
 * Further, every team member attended some major sessions in Silicon Valley Code Camp, like how to use AWs with Serverless Lambda and Java, etc. All five memebers in our team attended multiple sessions , so that each team member can incorporate the knowledge absorbed from these sessions into the project. This again shows the commitment and efforts taken by each member to work towards the team goals.
 
+## Commitment shown in Week 4
+
+The following are the core agile value of Commitment noticed in Week 4 of development:
+
+* In the week 4 of development and project discussions,every team member participated in project discussions and meetings inspite of evryone being busy with their midterm exams and other coursework projects.
+
+* As every team member promised during last week, they were able to achieve and show the further outputs and progress in the project.
+
 
 
 
