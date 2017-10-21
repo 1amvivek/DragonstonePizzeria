@@ -54,5 +54,11 @@ In Week 3 of the development process:
 
 * We have formed groups in multiple Internet based communication services for ease of discussions, to constantly understand the problems being faced by all the members and trying to resolve the issues together, as a team.
 
+## Updates from Week 4
+In Week 3 of the development process:
+* The team had a weekly scrum meeting to discuss about the progress made by each team member.
+
+* The major means of communication, during this week, has been through Internet medium. We have not faced any problems or miscommunication using Internt based services up until now.
+
 ## References:
 * [Agile Manifesto Principles](http://agilemanifesto.org/principles.html)
