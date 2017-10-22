@@ -91,43 +91,43 @@ Now that the structure for our program is in place, we are ready to write the tw
 Now we will write our `handleInsert` function that will take the data from an http.Request, and insert it into the database. We’re going to decode the request body manually here, but you might want to consider some patterns for decoding and validating input. Once we’ve decided the comment data, we’ll set the time and a give it a unique ID before inserting it into the database. Finally, we’ll redirect the user to a path that uniquely describes the new comment.
 
 To write a function that returns an Adapter that will setup (and teardown) the database session for our handlers and store it in a context for our handlers to get it later.
-Add the following code to main.go:
+Add the following code to main.go: 
 
-func withDB(db *mgo.Session) Adapter {
-  // return the Adapter
-  return func(h http.Handler) http.Handler {
-    // the adapter (when called) should return a new handler
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-      // copy the database session      
-      dbsession := db.Copy()
-      defer dbsession.Close() // clean up 
-      // save it in the mux context
-      context.Set(r, "database", dbsession)
-      // pass execution to the original handler
-      h.ServeHTTP(w, r)
-    })
-  }
+func withDB(db *mgo.Session) Adapter {  
+// return the Adapter  
+return func(h http.Handler) http.Handler {  
+// the adapter (when called) should return a new handler  
+return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {  
+// copy the database session  
+dbsession := db.Copy()  
+defer dbsession.Close() // clean up  
+// save it in the mux context  
+context.Set(r, "database", dbsession)  
+// pass execution to the original handler  
+h.ServeHTTP(w, r)  
+})  
+}  
 }
 
-## Setup the handler
+## Setup the handler  
 Since this is the only handler our API will use, we can now modify our main function to connect to MongoDB, adapt the handle function we just added, and tell the http package to serve it on port :8080.
 
-Modify the main function:
-func main() {
-  // connect to the database
-  db, err := mgo.Dial("localhost")
-  if err != nil {
-    log.Fatal("cannot dial mongo", err)
-  }
-  defer db.Close() // clean up when we’re done
-  // Adapt our handle function using withDB
-  h := Adapt(http.HandlerFunc(handle), withDB(db))
-  // add the handler
-  http.Handle("/comments", context.ClearHandler(h))
-  // start the server
-  if err := http.ListenAndServe(":8080", nil); err != nil {
-    log.Fatal(err)
-  }
+Modify the main function:  
+func main() {  
+// connect to the database  
+db, err := mgo.Dial("localhost")  
+if err != nil {  
+log.Fatal("cannot dial mongo", err)  
+}  
+defer db.Close() // clean up when we’re done  
+// Adapt our handle function using withDB  
+h := Adapt(http.HandlerFunc(handle), withDB(db))  
+// add the handler  
+http.Handle("/comments", context.ClearHandler(h))  
+// start the server  
+if err := http.ListenAndServe(":8080", nil); err != nil {  
+log.Fatal(err)  
+}  
 }
 
 
