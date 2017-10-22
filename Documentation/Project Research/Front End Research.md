@@ -61,4 +61,36 @@ Connections are established even in the presence of:
 * Express 4
 * Socket.IO 1.7.2
 
+**SAMPLE CODE**  
 
+**Client**  
+
+ var socket = io.connect('http://10.1.220.19:4200');  
+ socket.on('connect', function(data) {  
+    socket.emit('join', 'Hello World from client');  
+ });  
+ socket.on('broad', function(data) {  
+         $('#future').append(data+ "<br/>");  
+   });  
+
+ $('form').submit(function(e){  
+     e.preventDefault();  
+     var message = $('#chat_input').val();  
+     socket.emit('messages', message);  
+ });  
+ 
+ **Server**  
+ 
+ io.on('connection', function(client) {  
+    console.log('Client connected...');  
+
+    client.on('join', function(data) {  
+        console.log(data);  
+    });  
+
+    client.on('messages', function(data) {  
+           client.emit('broad', data);  
+           client.broadcast.emit('broad',data);  
+    });  
+
+});
