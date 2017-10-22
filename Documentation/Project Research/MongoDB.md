@@ -54,6 +54,24 @@ The MongoDB cluster (version 2.6 or 3.0) makes use of Amazon Elastic Compute Clo
 * The document examines scaling, replication, and performance tradeoffs in depth, and provides guidance to help you to choose appropriate types of EC2 instances and EBS volumes.
 
 
+# Up and Running MongoDB Docker:
+
+Here we are using the following commands to dockerize the latest MongoDB version.
+
+#### MongoDB latest Docker pull: 
+``` docker pull mongo:latest ```
+
+#### Run MongoDB Docker: 
+``` docker run -d -p 27017:27017 --name mongodb mongodb ```
+
+#### Run Mongod w/ persistent/shared directory:
+``` docker run -d -p 27017:27017 -v <db-dir>:/data/db --name mongodb mongodb ```
+
+#### Run Mongod w/ HTTP support:
+``` docker run -d -p 27017:27017 -p 28017:28017 --name mongodb mongodb --rest --httpinterface ```
+
+#### Run Mongo:
+``` docker run -it --rm --link mongodb:mongodb mongodb bash -c 'mongo --host mongodb' ```
 
 
 
