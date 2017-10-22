@@ -26,3 +26,9 @@ Highest business value features are delivered first to the customer by developme
 * feedbacks were given to form groups in communication platforms to discuss efficiently about the achievements and problems faced by the team members.
 * feedbacks about the time constraints that each member has was taken into account and the team was ready to help each other with the tasks.  
 * Team members gave their opinions about the new technologies that they learnt in the silicon valley code camp and gave feedbacks about the technologies that can be used for the betterment of the project.
+
+**Updates from week 4**  
+
+* feedback about the project architechture design was given constantly by each team member to come up with the best design.
+* Each team member shared their research updates for the week and the links to get feedback.  
+* All the team members reviewed the other members' work and the sample code shared.
