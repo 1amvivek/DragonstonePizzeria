@@ -21,3 +21,9 @@ The core agile value of respect is shown in the following instances during week 
 * Several considerations regarding how to use AWS lambda in the project were considered by giving mutual respect to team-mates opinions.
 
 * The team was open to help each other in completing their tasks at hand as they were busy in completing other course's assignments. This shows mutual respect to one's situation shown by the team.
+
+## Respect shown in Week 4
+
+* Durng the team discussion, every team member shared their reseach work they have done on the project. This has helped the team to easily design the architecture of the project. 
+
+* The team also decided on who works on which part of the project during the discussion.
