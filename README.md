@@ -19,4 +19,7 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
 [Raksha - API Gateway](https://github.com/nguyensjsu/cmpe281-brogrammers/blob/master/Documentation/Project%20Research/AWS%20API%20Gateway.md)
 
 # Kanban Flow Diagram
-[Google Sheet](https://docs.google.com/spreadsheets/d/1tjzxWAlYaej3zB1PyV0gQtKUqj9LLXnQ6AwsjMwqWHs/edit?ts=59c6b449#gid=2)
+[Google Sheet](https://docs.google.com/spreadsheets/d/1tjzxWAlYaej3zB1PyV0gQtKUqj9LLXnQ6AwsjMwqWHs/edit?ts=59c6b449#gid=2)  
+
+# Architectural Overview (prone to change)
+![Architectural Overview](./Documentation/Project%20Research/arch.png)
