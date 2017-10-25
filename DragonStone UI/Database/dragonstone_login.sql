@@ -40,26 +40,6 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`UserId`, `UserName`, `UserPassword`, `UserEmail`) VALUES
 (1, 'admin', 'admin', 'admin@gmail.com'),
 (2, 'renu', 'renu', 'renu@gmail.com'),
-(3, 'vivek', 'vivek123', 'vivek@live.com'),
-(4, 'Smitha V', 'Smitha123', 'smithav17@gmail.com'),
-(5, 'karan', '12BF1a04c6', 'karan@kukka.com'),
-(6, 'google', 'google', 'google@gmail.com'),
-(7, 'Chaitanya Kademane', 'chaitu123', 'chait.2605@gmail.com'),
-(8, 'Chaitanya Kademane', 'chaitu123', 'chait.2605@gmail.com'),
-(9, 'Chaitanya Kademane', 'chaitu123', 'chait.2605@gmail.com'),
-(10, 'Chaitanya Kademane', 'chaitu123', 'chait.2605@gmail.com'),
-(11, 'Chaitu', 'chaitu123', 'chaitu123@gmail.com'),
-(12, 'cai', 'cai123', 'cai@gmail.com'),
-(13, 'Aaditya Deowanshi', 'qwerty', 'aaditya.deowanshi@gmail.com'),
-(14, 'Aaditya Deowanshi', 'qwerty', 'aaditya.deowanshi@gmail.com'),
-(15, 'Aaditya Deowanshi', 'qwerty', 'aaditya.deowanshi@gmail.com'),
-(16, 'Aaditya . Deowanshi', '', 'aaditya.deowanshi@sjsu.edu'),
-(17, 'Smitha Venkatesh', '', 'smitha.venkatesh@sjsu.edu'),
-(18, 'Karthik Nair', '', 'karthikreads@gmail.com'),
-(19, 'spartan deals', '', 'spartandeals6@gmail.com'),
-(20, 'renu parameswaran', '', 'renu.parameswaran@gmail.com'),
-(21, 'Arun Ram', '', 'y.arunram@gmail.com'),
-(22, 'Jyothi Parameswaran', '', 'rupaparameswar@gmail.com');
 
 --
 -- Indexes for dumped tables
