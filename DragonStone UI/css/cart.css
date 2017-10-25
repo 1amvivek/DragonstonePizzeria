@@ -1,0 +1,38 @@
+tr.ng-scope {
+    text-align: center;
+}
+
+td.pizza-name {
+    width: 70%;
+}
+
+td.pizza-controls {
+    width: 2%;
+}
+
+td.pizza-amount {
+    width: 12%;
+}
+
+table {
+    width: 100%;
+}
+
+td {
+    padding: 14px 0px;
+    border-bottom: 1px solid #ddd;
+}
+
+.red
+{
+  color:red;
+}
+
+.green
+{
+  color:#09da09;;
+}
+
+.total {
+    text-align: center;
+}
