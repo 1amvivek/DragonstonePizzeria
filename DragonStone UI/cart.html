@@ -1,31 +1,11 @@
 <!DOCTYPE html>
 <html>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<Script src="..\NodeJs\node_modules\socket.io-client\dist\socket.io.js"></Script>
+<Script src="js\cart.js"></Script>
 <link rel="stylesheet" href="css/w3.css">
 <link rel="stylesheet" href="css/cart.css">
 <body>
-
-<script>
-var app = angular.module("myShoppingList", []); 
-app.controller("myCtrl", function($scope) {
-    $scope.quantity = 1;
-    $scope.amount = "$10";
-    $scope.products = ["Hound's Chicken", "Fire and Blood spicy pizza", "Spices are coming", "Winterfell special"];
-    $scope.addItem = function () {
-        $scope.errortext = "";
-        if (!$scope.addMe) {return;}
-        if ($scope.products.indexOf($scope.addMe) == -1) {
-            $scope.products.push($scope.addMe);
-        } else {
-            $scope.errortext = "The item is already in your shopping list.";
-        }
-    }
-    $scope.removeItem = function (x) {
-        $scope.errortext = "";    
-        $scope.products.splice(x, 1);
-    }
-});
-</script>
 
 <div ng-app="myShoppingList" ng-cloak ng-controller="myCtrl" class="w3-card-2 w3-margin" style="max-width:601px;">
   <header class="w3-container w3-light-grey w3-padding-16">
@@ -33,11 +13,11 @@ app.controller("myCtrl", function($scope) {
   </header>
   <table>
   <tr ng-repeat="x in products">
-    <td class="pizza-name">{{ x }}</td>
-    <td class="pizza-controls red" style="cursor:pointer;" title="remove quantity">-</td>
-    <td class="pizza-controls">{{quantity}}</td>
-    <td class="pizza-controls green" style="cursor:pointer;" title="add quantity">+</td>
-    <td class="pizza-amount">{{amount}}</td>
+    <td class="pizza-name">{{ x.name }}</td>
+    <td class="pizza-controls red" ng-click="removeQuantity($index)" style="cursor:pointer;" title="remove quantity">-</td>
+    <td class="pizza-controls">{{x.quantity}}</td>
+    <td class="pizza-controls green" ng-click="addQuantity($index)" style="cursor:pointer;" title="add quantity">+</td>
+    <td class="pizza-amount">{{x.price}}</td>
     <td class="pizza-controls red" ng-click="removeItem($index)" style="cursor:pointer;" title="remove item">X</td>
   </tr>
 </table>
