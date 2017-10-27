@@ -14,7 +14,7 @@
   <table>
   <tr ng-repeat="x in products">
     <td class="pizza-name">{{ x.name }}</td>
-    <td class="pizza-controls red" ng-click="removeQuantity($index)" style="cursor:pointer;" title="remove quantity">-</td>
+    <td class="pizza-controls red" ng-click="reduceQuantity($index)" style="cursor:pointer;" title="remove quantity">-</td>
     <td class="pizza-controls">{{x.quantity}}</td>
     <td class="pizza-controls green" ng-click="addQuantity($index)" style="cursor:pointer;" title="add quantity">+</td>
     <td class="pizza-amount">{{x.price}}</td>
@@ -27,7 +27,7 @@
         Total:
       </div>
       <div class="w3-col s1">
-        $40
+        {{totalPrice}}
       </div>
     </div>
     <p class="w3-text-red">{{errortext}}</p>
