@@ -75,17 +75,13 @@ app.post('/register', function(req, res){
 		});
 
 		req.flash('success_msg', 'You are registered and can now login');
-
-		
 	}
 
-res.send(‘You are registered successfully');
-
+res.send('You are registered successfully');
    
-console.log(‘New User successfully registered’);
+console.log('New User successfully registered');
 
 });
-
 
 
 server.listen(8080, function() {
