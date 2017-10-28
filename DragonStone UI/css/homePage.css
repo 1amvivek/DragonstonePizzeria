@@ -1,0 +1,12 @@
+
+h1 {
+    font-style: italic;
+}
+
+#animate {
+    opacity:0;
+    -webkit-transition:opacity 1.0s linear 0s;
+    transition:opacity 1.0s linear 0s;
+    font-size: 50px;
+    color: hsl(0, 100%, 76%);
+}
