@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>Fashionista</title>
+<title>DragonStone Pizzeria</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
@@ -16,10 +16,29 @@
 <link rel="stylesheet" href="lib/css/preview.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/homePage.css">
 <link rel="stylesheet" href="css/animate.css">
 <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+<script>
+    var increment = 0;
+    var word_array = ["<i>Fiery</i>","<i>Hot</i>","<i>Sizzling</i>","<i>Cheesy</i>"];
+    var domElement;
+    function nextWord(){
+      increment++;
+      domElement.style.opacity = 0;
+      if(increment > (word_array.length - 1)){
+        increment = 0;
+      }
+      setTimeout('slide()',1000);
+    }
+    function slide(){
+      domElement.innerHTML = word_array[increment];
+      domElement.style.opacity = 1;
+      setTimeout('nextWord()',1000);
+    }
+</script>
 </head>
 
 <body class="home">
@@ -73,7 +92,7 @@
             <div class='mobile-menu-area'>
               <nav id="mobile-menu">
                 <ul>
-                  <li><a href="index.html">Home</a> </li>
+                  <li><a href="#">Home</a> </li>
                   <li><a href="#">Shop</a> </li>
                   <li><a href="#">About</a> </li>
                   <li><a href="#">Contact</a> </li>
@@ -93,15 +112,17 @@
       <div class="col-md-12 col-sm-12">
         <div class="shop-header-title">
             <div class="aligncenter w3-container">
-                <h2>Welcome to DragonStone Pizzeria</h2>
-                <div class="aligncenter">
+                <h1>Welcome to DragonStone Pizzeria</h1>
+                <!--<div class="aligncenter">
                 <h3>Not a member of DragonStone?</h3>
                 <a href="signup.html" class="w3-btn w3-black">Sign Up</a>
                 <h3>Already a member?</h3>
                 <a href="signup.html" class="w3-btn w3-black">Log In</a>
-                </div>
-                <div style="background-color: black; color:whitesmoke;">
-                    
+                </div> -->
+                <br/>
+                <div>  
+                  <h2>Bringing people Together,</h2>
+                  <h2>Over <span id="animate"></span> Pizza!!</h2>
                 </div>
             </div>
           </div>
@@ -137,6 +158,11 @@
     </div>
   </div>
 </div>
+
+<script>
+  domElement = document.getElementById("animate"); 
+  slide(); 
+</script>
 <script src="js/vendor/jquery-1.11.3.min.js"></script> 
 <script src="lib/js/jquery.nivo.slider.js" type="text/javascript"></script> 
 <script src="lib/home.js" type="text/javascript"></script>
