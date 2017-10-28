@@ -13,7 +13,8 @@ import (
 )
 
 var redis_connect = "192.168.99.100:6379"
-var mongodb_server = "192.168.99.100"
+var mongodb_server = "192.168.99.100:27017"
+var mongodb_server2 = "192.168.99.100:27018"
 var mongodb_database = "cmpe281"
 var mongodb_collection = "redistest"
 
@@ -38,18 +39,34 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 }
 
 // Helper Functions
-func failOnError(err error, msg string) {
+
+func getFromMongo(mongodb string, serialNumber string) bson.M {
+	fmt.Println("mongo connecting to " + mongodb)
+	session, err := mgo.Dial(mongodb)
+
 	if err != nil {
-		log.Fatalf("here")
-		log.Fatalf("%s: %s", msg, err)
-		panic(fmt.Sprintf("%s: %s", msg, err))
+		log.Fatal("mongo failed to connect")
+		panic(err)
 	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodb_database).C(mongodb_collection)
+	var result bson.M
+	//get from mongo
+	err = c.Find(bson.M{"SerialNumber": serialNumber}).One(&result)
+	if err != nil {
+		//could not find in mongo (inserting into mongo for now. TODO: Make proper)
+		c.Insert(bson.M{"SerialNumber": "1", "Name": "Sample"})
+	}
+	return result
+
 }
 
 // API GET Handler
 func getHandler(formatter *render.Render) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, req *http.Request) {
+		//get request param
 		params := mux.Vars(req)
 		var serialNumber string = params["order_id"]
 		cacheFlag := false
@@ -69,30 +86,20 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		if cacheFlag {
 			fmt.Println("It got from Mongo")
 			//connect to mongo
-			session, err := mgo.Dial(mongodb_server)
-			if err != nil {
-				log.Fatal("mongo failed to connect")
-				panic(err)
+			result := getFromMongo(mongodb_server, serialNumber)
+			result2 := getFromMongo(mongodb_server2, serialNumber)
+			if result["serialNumber"] == result2["serialNumber"] {
+				//print from mongo
+				formatter.JSON(w, http.StatusOK, result)
+				//store in redis
+				conn.Cmd("HMSET", result["SerialNumber"], "Name", result["Name"])
+			} else {
+				fmt.Println("things went wrong")
 			}
-			defer session.Close()
-			session.SetMode(mgo.Monotonic, true)
-			c := session.DB(mongodb_database).C(mongodb_collection)
-			var result bson.M
-			//get from mongo
-			err = c.Find(bson.M{"SerialNumber": serialNumber}).One(&result)
-			if err != nil {
-				//could not find in mongo (inserting into mongo for now. TODO: Make proper)
-				c.Insert(bson.M{"SerialNumber": "1", "Name": "Sample"})
-			}
-			//print from mongo
-			formatter.JSON(w, http.StatusOK, result)
-			//store in redis
-			conn.Cmd("HMSET", result["SerialNumber"], "Name", result["Name"])
-
 		} else {
 			fmt.Println("It got from REDIS")
 			//print from redis
-			formatter.JSON(w, http.StatusOK, result)
+			formatter.JSON(w, http.StatusOK, name)
 		}
 	}
 
