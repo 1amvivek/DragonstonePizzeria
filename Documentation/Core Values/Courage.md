@@ -38,12 +38,17 @@ Here, courage was demonstrated in the following instances:
 * At the Silicon Valley Code Camp session on "AWS Lambda" and "Good-bye VM, Hello Docker", keeping with the Agile value of Courage, we asked the instructor on various means of deploying Go code to AWS Lambda and discussed the Pros and Cons of the approach.
 * In a display of Courage, I asked the TA's for CMPE 281 class for help configuring the required settings in order to set up a CICD pipeline to Heroku as this requires Admin privileges to the Repository.
   
+
   
 ## Courage shown in Week 4
 * In a display of courage keeping in line with the Agile Core Values, **I was able to learn Go, socket.io with node.js and basic Angular building on the Angular101 class at Silicon Valley Code Camp without having any prior experience in the same**.
 * In a display of courage, the team was able to **arrange face-to-face conversation for project discussions** in spite of having mid-terms.
   
-  
+
+
+## Courage shown in Week 4
+* Keeping in line with the Agile Core Value of courage, **I was able to build a basic API for the backend by just diving into the build**.
+* In a display of courage, **the team was able to work independently on UI and backend modules in a co-ordinated fashion with quick face to face discussions.**   
   
    
 ## References

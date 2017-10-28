@@ -92,7 +92,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		} else {
 			fmt.Println("It got from REDIS")
 			//print from redis
-			formatter.JSON(w, http.StatusOK, name)
+			formatter.JSON(w, http.StatusOK, result)
 		}
 	}
 
