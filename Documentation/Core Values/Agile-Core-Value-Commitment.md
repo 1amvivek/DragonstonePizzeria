@@ -41,8 +41,14 @@ The following are the core agile value of Commitment noticed in Week 4 of develo
 
 * As every team member promised during last week, they were able to achieve and show the further outputs and progress in the project.
 
+## Commitment shown in Week 5
 
+The following are the core agile value of Commitment noticed in Week 5 of development:
 
+* In the week 5 of development and project discussions,all members were present for project discussions inspite of being busy with their other courses term projects.
 
+* Everyone tried to coordinate so well with their modules, so that consistency is maintained throughout the project.
+
+* Each team member have put good efforts to complete their module for this week and explained their module and effort taken to the entire team, so that each of us will be aware of good methods practiced within the team.
 
 
