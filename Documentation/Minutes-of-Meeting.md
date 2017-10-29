@@ -82,3 +82,25 @@
 * Confirmed if every project member is comfortable with the topics/functionalities divided among them for their part of development.
 * Clarified the doubts and project limitations with every team member to speed up the performance.
 
+# Week 5
+
+<b>Date:</b> 10/25/2017  
+<b>Time:</b> 1:00 pm  
+<b>Place:</b> Student Union,San Jose State University
+
+<b>Members Present: </b> 
+1. Arun  
+2. Pranav  
+3. Raksha  
+4. Renu  
+5. Vivek
+
+# Meeting Purpose:
+
+* Discussed about each members outputs that they achieved for week 1 and what improvements to do further with it.
+* Further discussed about how we have achieved front-end consistency using sockets and back-end consistency with CRDT and quorum based   replication approach.
+* Decided about the modules and functionalities to be achieved for next week.
+* Efficiently set some targets for every team member to achieve by next week end.
+* Discussed about how effective coding practices are maintained throughout the project.
+
+
