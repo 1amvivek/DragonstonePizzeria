@@ -27,3 +27,9 @@ The core agile value of respect is shown in the following instances during week 
 * Durng the team discussion, every team member shared their reseach work they have done on the project. This has helped the team to easily design the architecture of the project. 
 
 * The team also decided on who works on which part of the project during the discussion.
+
+## Respect shown in Week 5
+
+* After researching on the project for four weeks, the team laid down a proper plan to build the project within the deadline. 
+
+* During team discussions, the team were open to opinions and discussions. This shows the respect shown by the team.
