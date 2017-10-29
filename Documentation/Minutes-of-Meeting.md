@@ -97,10 +97,10 @@
 
 # Meeting Purpose:
 
-* Discussed about each members outputs that they achieved for week 1 and what improvements to do further with it.
+* Discussed about each team members outputs that they have achieved for week 1 and what improvements to do further with it.
 * Further discussed about how we have achieved front-end consistency using sockets and back-end consistency with CRDT and quorum based   replication approach.
-* Decided about the modules and functionalities to be achieved for next week.
+* Decided about the modules and functionalities to be completed for next week.
 * Efficiently set some targets for every team member to achieve by next week end.
-* Discussed about how effective coding practices are maintained throughout the project.
+* Discussed about how effective coding methods/practices are maintained throughout the project.
 
 
