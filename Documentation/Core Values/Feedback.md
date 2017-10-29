@@ -32,3 +32,9 @@ Highest business value features are delivered first to the customer by developme
 * feedback about the project architechture design was given constantly by each team member to come up with the best design.
 * Each team member shared their research updates for the week and the links to get feedback.  
 * All the team members reviewed the other members' work and the sample code shared.
+
+**Updates from week 5**  
+
+* The team discussed about the control flow for implementing the consensus theorom and gave constant feedbacks to get the right approach.
+* One of the team members came up with an idea to reduce the load on get requests and other team members gave positive feedback to it.
+* The team members discussed the work they did last week, problems they faced last week and the next week's plan in the stand up.
