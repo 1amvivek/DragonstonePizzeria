@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"encoding/json"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/mediocregopher/radix.v2/redis"
@@ -10,19 +11,25 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
+	"github.com/gocql/gocql"
 )
 
 var redis_connect = "192.168.99.100:6379"
-var mongodb_server = "192.168.99.100:27017"
+var mongodb_server1 = "192.168.99.100:27017"
 var mongodb_server2 = "192.168.99.100:27018"
+var mongodb_server3 = "192.168.99.100:27019"
+var cassandra_server = "192.168.99.100:32769"
 var mongodb_database = "cmpe281"
 var mongodb_collection = "redistest"
+var i = 0
+var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3, cassandra_server}
+
 
 type (
 	// User represents the structure of our resource
 	User struct {
-		SerialNumber string `json: "id"`
-		Name         string `json: "name"`
+		SerialNumber string	`json: "id"`
+		Name  string `json: "name"`
 	}
 )
 
@@ -41,10 +48,17 @@ func NewServer() *negroni.Negroni {
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/orders/{order_id}", getHandler(formatter)).Methods("GET")
-	//mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
 	//mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
 	//mx.HandleFunc("/order", deleteHandler(formatter)).Methods("DELETE")
 }
+
+func ErrorWithJSON(w http.ResponseWriter, message string, code int) {  
+    w.Header().Set("Content-Type", "application/json; charset=utf-8")
+    w.WriteHeader(code)
+    fmt.Fprintf(w, "{message: %q}", message)
+}
+
 
 // Helper Functions
 
@@ -104,7 +118,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		conn, cacheFlag, name := connectToRedis(redis_connect, serialNumber)
 
 		if cacheFlag {
-			fmt.Println("It got from Mongo")
+			fmt.Println("The values are fetched from Mongo")
 			//connect to mongo
 			result := getFromMongo(mongodb_server, serialNumber)
 			result2 := getFromMongo(mongodb_server2, serialNumber)
@@ -124,3 +138,89 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 	}
 
 }
+
+func getSession(mongodb_bal_server string) *mgo.Session {  
+    // Connect to mongo cluster
+    //mongodb_bal_server := Balance()
+    fmt.Println("mongo connecting to " + mongodb_bal_server)
+    s, err := mgo.Dial(mongodb_bal_server)
+
+    // Check if connection error, is mongo running?
+    if err != nil {
+        panic(err)
+    }
+    s.SetMode(mgo.Monotonic, true)
+    return s
+}
+
+
+
+func postHandler(formatter *render.Render) http.HandlerFunc {  
+    return func(w http.ResponseWriter, req *http.Request) {
+	
+	//get mongodb connection
+    var errs []string
+    var user User
+    decoder := json.NewDecoder(req.Body)
+    err1 := decoder.Decode(&user)
+
+    server_val := Balance()
+    if server_val== cassandra_server {
+    s := getSession2(server_val) 
+    defer s.Close()
+
+    fmt.Println("creating a new user")
+
+    // generate a unique UUID for this user
+    var id = gocql.TimeUUID()
+    // write data to Cassandra
+    if err1 := s.Query(`
+     INSERT INTO user (SerialNumber, id, Name) VALUES (?, ?, ?)`,
+	 user.SerialNumber,id, user.Name).Exec(); err1 != nil {
+		      errs = append(errs, err1.Error())
+    } 
+    w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Location", req.URL.Path+"/"+user.SerialNumber)
+    w.WriteHeader(http.StatusCreated)
+    w.WriteHeader(200)
+	 
+
+    return
+    }
+    
+    s := getSession(server_val)
+    defer s.Close()
+    
+    if err1 != nil {
+        ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
+        return
+    }
+
+    
+    c := s.DB(mongodb_database).C(mongodb_collection)
+
+    err2 := c.Insert(user)
+    
+    if err2 != nil {
+        if mgo.IsDup(err2) {
+        	    fmt.Println("exists already")
+                ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
+                return
+        }
+
+
+        ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
+        log.Println("Failed insert user: ", err2)
+        return
+        }
+    
+       
+    w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Location", req.URL.Path+"/"+user.SerialNumber)
+    w.WriteHeader(http.StatusCreated)
+    w.WriteHeader(200)
+	 
+
+	}
+}
+
