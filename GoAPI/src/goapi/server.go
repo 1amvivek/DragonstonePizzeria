@@ -18,6 +18,14 @@ var mongodb_server2 = "192.168.99.100:27018"
 var mongodb_database = "cmpe281"
 var mongodb_collection = "redistest"
 
+type (
+	// User represents the structure of our resource
+	User struct {
+		SerialNumber string `json: "id"`
+		Name         string `json: "name"`
+	}
+)
+
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
@@ -62,6 +70,28 @@ func getFromMongo(mongodb string, serialNumber string) bson.M {
 
 }
 
+func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, bool, string) {
+
+	conn, err := redis.Dial("tcp", redis_connect)
+	if err != nil {
+		log.Fatal("redis failed to connect")
+		log.Fatal(err)
+	}
+	cacheFlag := false
+	//get from redis
+	name, err := conn.Cmd("HGET", serialNumber, "Name").Str()
+	if err != nil {
+		//not in redis
+		fmt.Println("couldn't find values in Redis")
+
+		cacheFlag := true
+		return conn, cacheFlag, name
+
+	}
+
+	return conn, cacheFlag, name
+}
+
 // API GET Handler
 func getHandler(formatter *render.Render) http.HandlerFunc {
 
@@ -71,17 +101,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		var serialNumber string = params["order_id"]
 		cacheFlag := false
 		//connect to redis
-		conn, err := redis.Dial("tcp", redis_connect)
-		if err != nil {
-			log.Fatal("redis failed to connect")
-			log.Fatal(err)
-		}
-		//get from redis
-		name, err := conn.Cmd("HGET", serialNumber, "Name").Str()
-		if err != nil {
-			//not in redis
-			cacheFlag = true
-		}
+		conn, cacheFlag, name := connectToRedis(redis_connect, serialNumber)
 
 		if cacheFlag {
 			fmt.Println("It got from Mongo")
@@ -97,7 +117,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 				fmt.Println("things went wrong")
 			}
 		} else {
-			fmt.Println("It got from REDIS")
+			fmt.Println("The values are fetched from REDIS")
 			//print from redis
 			formatter.JSON(w, http.StatusOK, name)
 		}
