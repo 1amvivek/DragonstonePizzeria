@@ -153,6 +153,33 @@ func getSession(mongodb_bal_server string) *mgo.Session {
     return s
 }
 
+func getSession2(cassandra_bal_server string) *gocql.Session {  
+    // Connect to cassandra cluster
+    
+    fmt.Println("cassandra connecting to " + cassandra_bal_server)
+    
+	cluster := gocql.NewCluster(cassandra_bal_server)
+	cluster.Keyspace = "example"
+	cluster.Consistency = gocql.Quorum
+	session, _ := cluster.CreateSession()
+	
+    return session
+}
+
+
+
+// Balance returns one of the servers based using round-robin algorithm
+func Balance() string {
+	server := servers[i]
+	i++
+
+	// reset the counter and start from the beginning
+	// if we reached the end of servers
+	if i >= len(servers) {
+		i = 0
+	}
+	return server
+}
 
 
 func postHandler(formatter *render.Render) http.HandlerFunc {  
