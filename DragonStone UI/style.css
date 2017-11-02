@@ -25,8 +25,8 @@ a:focus {
 	outline: 0px solid
 }
 img {
-	max-width: 100%;
-	height: auto
+	width: 100%;
+	height: auto;
 }
 .fix {
 	overflow: hidden
@@ -974,6 +974,8 @@ ul.mini_cart_inner li {
 }
 .cart-total ul.cart_list li .product-image img:hover {
 	border: 1px solid #FF8787;
+	width: 50px;
+	height: auto;
 }
 .btn.active.focus, .btn.active:focus, .btn.focus, .btn.focus:active, .btn:active:focus, .btn:focus {
 	outline: medium none;
@@ -6931,4 +6933,131 @@ h3.widget-title-modal {
 
 #values, #values th, #values td {
 	border: 1px solid black;
+}
+
+
+#pizza_image {
+	height: auto; 
+    width: auto; 
+    max-width: 150px; 
+	max-height: 150px ;	
+}
+
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+	column-width: auto;
+	column-gap: 0;
+}
+
+caption {
+	color: red;
+}
+
+td {
+	width: 250px;
+	text-align: center;
+	padding:0;
+	LINE-HEIGHT:20px;
+}
+
+.row_hover:hover {
+	background-color: #F1EDED;
+}
+
+tr>td {
+	border-bottom-width: 15px;
+	padding-bottom: 1em;
+}
+
+input[type="radio"]{
+	margin: 0 10px 0 10px;
+  }
+
+  input[type="checkbox"]{
+	margin: 0 10px 0 10px;
+  }
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+.modal_image {
+	height: auto; 
+    width: auto; 
+    max-width: 200px; 
+	max-height: 200px ;	
+	
+}
+
+div.modal_image_position {
+	position: relative;
+	left: 450px;
+	padding: 10px;
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: lightgrey;
+    color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: lightgrey;
+    color: white;
 }
