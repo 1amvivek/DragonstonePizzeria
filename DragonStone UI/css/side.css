@@ -1,0 +1,80 @@
+html,body{
+    font-size: 13px;
+    line-height: 1;
+}
+
+tr.ng-scope {
+    text-align: center;
+    font-size: 13px;
+    line-height: 1;
+}
+
+td.pizza-name {
+    width: 70%;
+}
+
+td.pizza-controls {
+    width: 2%;
+}
+
+td.pizza-amount {
+    width: 12%;
+}
+
+
+.sidearea td {
+    padding: 14px 0px;
+    border-bottom: 1px solid #ddd !important;
+  }
+
+.w3-margin-top {
+    margin-top: 10px !important;
+    margin-bottom: 10px;
+}
+
+
+.sidearea{
+width: 300px;
+color: black !important;
+float: right;
+    margin-right: 30px !important;
+}
+
+.cart,.logs{
+    max-height:400px;
+    margin-bottom: 20px;
+    overflow-y: auto;
+}
+
+.logentries{
+    text-align: left !important;
+}
+
+.topic{
+    color: #fff;
+    background: #ba0204;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.topic h4{
+    color: #fff;
+   }
+.cartheader{
+    font-weight: bold !important;
+}
+
+.red
+{
+  color:red;
+}
+
+.green
+{
+  color:#09da09;;
+}
+
+.total {
+    text-align: center;
+}

@@ -20,6 +20,11 @@
   <link rel="stylesheet" href="css/animate.css">
   <link rel="stylesheet" href="css/responsive.css">
   <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<Script src="..\NodeJs\node_modules\socket.io-client\dist\socket.io.js"></Script>
+<Script src="js\cart.js"></Script>
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/side.css">
 </head>
 
 <body class="home">
@@ -99,6 +104,57 @@
     </div>
   </div>
   </div>
+  <div ng-app="myShoppingList" ng-cloak ng-controller="myCtrl" class="w3-card-2 w3-margin sidearea" style="max-width:601px;">
+  <div class="cart">
+        <header class="w3-container topic">
+          <h4>My Shopping Cart</h4>
+        </header>
+        <table>
+        <tr class="ng-scope cartheader">
+          <td class="pizza-name">Item</td>
+          <td class="pizza-controls"></td>
+          <td class="pizza-controls"></td>
+          <td class="pizza-controls"></td>
+          <td class="pizza-amount">price</td>
+          <td class="pizza-controls"></td>
+        </tr>
+        <tr ng-repeat="x in products">
+          <td class="pizza-name">{{ x.name }}</td>
+          <td class="pizza-controls red" ng-click="reduceQuantity($index)" style="cursor:pointer;" title="remove quantity">-</td>
+          <td class="pizza-controls">{{x.quantity}}</td>
+          <td class="pizza-controls green" ng-click="addQuantity($index)" style="cursor:pointer;" title="add quantity">+</td>
+          <td class="pizza-amount">{{x.price}}</td>
+          <td class="pizza-controls red" ng-click="removeItem($index)" style="cursor:pointer;" title="remove item">X</td>
+        </tr>
+        <tr class="ng-scope cartheader">
+          <td class="pizza-name">Total</td>
+          <td class="pizza-controls"></td>
+          <td class="pizza-controls"></td>
+          <td class="pizza-controls"></td>
+          <td class="pizza-amount">{{totalPrice}}</td>
+          <td class="pizza-controls"></td>
+        </tr>
+      </table>
+      <div class="w3-container topic">
+          <div class="w3-row w3-margin-top"  ng-click="checkOut($index)" style="cursor:pointer;" title="remove item">
+            Checkout
+          </div>
+         
+        </div>
+  </div>
+  <div class="logs">
+        <header class="w3-container topic">
+          <h4>Users Activity Logs</h4>
+        </header>
+        <table>
+        
+        <tr ng-repeat="x in logs" class="ng-scope">
+          <td  class="logentries">{{ x }}</td>
+        </tr>
+      </table>
+  </div>
+</div>
+
   <div>
     <table cellspacing="0">
       <caption>
@@ -124,12 +180,7 @@
         <td>
           <a href="">
             <h5 class="old-price"> <span class="price">$12.00</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
       <tr class="row_hover">
         <td>
@@ -151,12 +202,7 @@
         <td>
           <a href="#">
             <h5 class="old-price"> <span class="price">$10.00</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
 
       <!-- Third Pizza -->
@@ -180,12 +226,7 @@
         <td>
           <a href="">
             <h5 class="old-price"> <span class="price">$8.00</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
 
       <tr class="row_hover">
@@ -208,12 +249,7 @@
         <td>
           <a href="">
             <h5 class="old-price"> <span class="price">$15.00</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
 
       <tr class="row_hover">
@@ -237,12 +273,7 @@
         <td>
           <a href="">
             <h5 class="old-price"> <span class="price">$15.99</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
 
       <tr class="row_hover">
@@ -265,12 +296,7 @@
         <td>
           <a href="">
             <h5 class="old-price"> <span class="price">$8.99</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
 
       <tr class="row_hover">
@@ -293,12 +319,7 @@
         <td>
           <a href="">
             <h5 class="old-price"> <span class="price">$13.99</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
 
       <tr class="row_hover">
@@ -322,12 +343,7 @@
         <td>
           <a href="">
             <h5 class="old-price"> <span class="price">$9.99</span></h5>
-          </a>
-          </div>
-        </td>
-        <td>
-          <button onclick="">Add to Cart</button>
-        </td>
+            </div>
       </tr>
     </table>
 
@@ -398,9 +414,102 @@
             <h4><button onclick="">Add to Cart</button></h4>
           </div>
         </div>
+
+        <!-- Modal content for Cheese pizza 
+      <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Pepperoni Pizza</h2>
+            <h3>$12.00</h3>
+          </div>
+          <div class="modal_image_position">
+          <img class="modal_image" src="img/product/1.jpg"/>
+          </div>
+          <div class="modal-body">
+                  <p>This is a medium spicy Pepperoni Pizza with Tomato sauce, triple Pepperoni and mozzarella cheese.</p>
+                  <hr/>
+                  <h5>Choose Size of the Pizza</h5>
+                  <input type="radio" name="size">Small</input>
+                  <input type="radio" name="size">Medium</input>
+                  <input type="radio" name="size">Large</input>
+                  <hr/>
+                  <h5>Extra Toppings</h5>
+                  <input type="checkbox">Cheese</input>
+                  <input type="checkbox">Onions</input>
+                  <input type="checkbox">Black Olives</input>
+                  <input type="checkbox">Chicken</input>
+                  <input type="checkbox">Sun Dried Tomato</input>
+                  <input type="checkbox">Jalapeno Peppers</input>
+          </div>
+          <div class="modal-footer">
+            <h4><button onclick="">Add to Cart</button></h4>
+          </div>
+        </div>
+
+        <!-- Modal content for BBQ Chicken bacon pizza 
+      <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Pepperoni Pizza</h2>
+            <h3>$12.00</h3>
+          </div>
+          <div class="modal_image_position">
+          <img class="modal_image" src="img/product/1.jpg"/>
+          </div>
+          <div class="modal-body">
+                  <p>This is a medium spicy Pepperoni Pizza with Tomato sauce, triple Pepperoni and mozzarella cheese.</p>
+                  <hr/>
+                  <h5>Choose Size of the Pizza</h5>
+                  <input type="radio" name="size">Small</input>
+                  <input type="radio" name="size">Medium</input>
+                  <input type="radio" name="size">Large</input>
+                  <hr/>
+                  <h5>Extra Toppings</h5>
+                  <input type="checkbox">Cheese</input>
+                  <input type="checkbox">Onions</input>
+                  <input type="checkbox">Black Olives</input>
+                  <input type="checkbox">Chicken</input>
+                  <input type="checkbox">Sun Dried Tomato</input>
+                  <input type="checkbox">Jalapeno Peppers</input>
+          </div>
+          <div class="modal-footer">
+            <h4><button onclick="">Add to Cart</button></h4>
+          </div>
+        </div>
+
+        <!-- Modal content for Spicy Italian pizza pizza
+      <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Pepperoni Pizza</h2>
+            <h3>$12.00</h3>
+          </div>
+          <div class="modal_image_position">
+          <img class="modal_image" src="img/product/1.jpg"/>
+          </div>
+          <div class="modal-body">
+                  <p>This is a medium spicy Pepperoni Pizza with Tomato sauce, triple Pepperoni and mozzarella cheese.</p>
+                  <hr/>
+                  <h5>Choose Size of the Pizza</h5>
+                  <input type="radio" name="size">Small</input>
+                  <input type="radio" name="size">Medium</input>
+                  <input type="radio" name="size">Large</input>
+                  <hr/>
+                  <h5>Extra Toppings</h5>
+                  <input type="checkbox">Cheese</input>
+                  <input type="checkbox">Onions</input>
+                  <input type="checkbox">Black Olives</input>
+                  <input type="checkbox">Chicken</input>
+                  <input type="checkbox">Sun Dried Tomato</input>
+                  <input type="checkbox">Jalapeno Peppers</input>
+          </div>
+          <div class="modal-footer">
+            <h4><button onclick="">Add to Cart</button></h4>
+          </div>
+        </div>
     
     </div>-->
-
+      
     <!-- js file for modal boxes -->
     <script src="js/product_catalog.js" type="text/javascript"></script>
 
