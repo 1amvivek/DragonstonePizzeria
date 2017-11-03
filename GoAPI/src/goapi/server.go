@@ -31,6 +31,9 @@ type (
 		SerialNumber string	`json: "id"`
 		Name  string `json: "name"`
 	}
+	Id struct  {
+		SerialNumber string `json: "id"`
+	}
 )
 
 // NewServer configures and returns a Server.
@@ -75,10 +78,11 @@ func getFromMongo(mongodb string, serialNumber string) bson.M {
 	c := session.DB(mongodb_database).C(mongodb_collection)
 	var result bson.M
 	//get from mongo
-	err = c.Find(bson.M{"SerialNumber": serialNumber}).One(&result)
+	err = c.Find(bson.M{"serialnumber": serialNumber}).One(&result)
 	if err != nil {
 		//could not find in mongo (inserting into mongo for now. TODO: Make proper)
-		c.Insert(bson.M{"SerialNumber": "1", "Name": "Sample"})
+		// c.Insert(bson.M{"SerialNumber": "1", "Name": "Sample"})
+		fmt.Println("Some Error in Get, maybe data is not present")
 	}
 	return result
 
@@ -144,7 +148,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 					panic(err)				
 				}
 				//store in redis
-				conn.Cmd("HMSET", result["SerialNumber"], "object", redstore)
+				conn.Cmd("HMSET", result["serialnumber"], "object", redstore)
 			} else {
 				fmt.Println("things went wrong")
 			}
@@ -204,7 +208,7 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
     return func(w http.ResponseWriter, req *http.Request) {
 	
 	//get mongodb connection
-    var errs []string
+    var errs [] string
     var user User
     decoder := json.NewDecoder(req.Body)
     err1 := decoder.Decode(&user)
@@ -264,8 +268,6 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
     w.Header().Set("Location", req.URL.Path+"/"+user.SerialNumber)
     w.WriteHeader(http.StatusCreated)
     w.WriteHeader(200)
-	 
-
 	}
 }
 
