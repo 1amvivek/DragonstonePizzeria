@@ -84,8 +84,8 @@ func getFromMongo(mongodb string, serialNumber string) bson.M {
 
 }
 
-func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, bool, string) {
-
+func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, bool, User) {
+	var result User
 	conn, err := redis.Dial("tcp", redis_connect)
 	if err != nil {
 		log.Fatal("redis failed to connect")
@@ -93,18 +93,32 @@ func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, b
 	}
 	cacheFlag := false
 	//get from redis
-	name, err := conn.Cmd("HGET", serialNumber, "Name").Str()
+	val, err := conn.Cmd("HGET", serialNumber, "object").Str()
 	if err != nil {
 		//not in redis
 		fmt.Println("couldn't find values in Redis")
 
-		cacheFlag := true
-		return conn, cacheFlag, name
+		cacheFlag = true
 
 	}
-
-	return conn, cacheFlag, name
+	json.Unmarshal([]byte(val), &result)
+	fmt.Println("cacheFlag")
+	fmt.Println(cacheFlag)
+	
+	return conn, cacheFlag, result
 }
+
+func getNodes (uuid int) []string {
+	start := uuid % len(servers)
+	end := start + len(servers)/2 + 1
+	if  end < len(servers) -1 {
+		return servers[start:end]
+	}else{
+		return append(servers[start:],servers[:end]...)
+	}	
+}
+
+
 
 // API GET Handler
 func getHandler(formatter *render.Render) http.HandlerFunc {
@@ -116,17 +130,21 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		cacheFlag := false
 		//connect to redis
 		conn, cacheFlag, name := connectToRedis(redis_connect, serialNumber)
-
+		
 		if cacheFlag {
 			fmt.Println("The values are fetched from Mongo")
 			//connect to mongo
-			result := getFromMongo(mongodb_server, serialNumber)
+			result := getFromMongo(mongodb_server1, serialNumber)
 			result2 := getFromMongo(mongodb_server2, serialNumber)
 			if result["serialNumber"] == result2["serialNumber"] {
 				//print from mongo
 				formatter.JSON(w, http.StatusOK, result)
+				redstore,err:=json.Marshal(result)
+				if err!=nil{
+					panic(err)				
+				}
 				//store in redis
-				conn.Cmd("HMSET", result["SerialNumber"], "Name", result["Name"])
+				conn.Cmd("HMSET", result["SerialNumber"], "object", redstore)
 			} else {
 				fmt.Println("things went wrong")
 			}
