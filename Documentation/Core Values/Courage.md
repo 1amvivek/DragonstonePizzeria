@@ -46,9 +46,15 @@ Here, courage was demonstrated in the following instances:
   
 
 
-## Courage shown in Week 4
+## Courage shown in Week 5
 * Keeping in line with the Agile Core Value of courage, **I was able to build a basic API for the backend by just diving into the build**.
 * In a display of courage, **the team was able to work independently on UI and backend modules in a co-ordinated fashion with quick face to face discussions.**   
+  
+  
+## Courage shown in Week 6
+* In a demonstration of courage, **the team was able to collaborate and speak out when we noticed errors as well as courageously admit mistakes** in order to have them corrected quickly.  
+* The team was able to create a working REST endpoints using Go with multiple Docker containers with minimal to no experience in the fields in a **courageous head-first dive**.   
+* **Courageously taking ownership** of parts of the code ensured that members of the team were actively involved in the development and multiple parts of the system were developed simultaneously.  
   
    
 ## References
