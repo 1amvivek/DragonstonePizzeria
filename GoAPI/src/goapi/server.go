@@ -22,8 +22,8 @@ var cassandra_server = "192.168.99.100:32769"
 var mongodb_database = "cmpe281"
 var mongodb_collection = "redistest"
 var i = 0
-var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3, cassandra_server}
-
+var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3}
+//cassandra_server
 
 type (
 	// User represents the structure of our resource
@@ -53,7 +53,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/orders/{order_id}", getHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
 	//mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
-	//mx.HandleFunc("/order", deleteHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("/order", deleteHandler(formatter)).Methods("DELETE")
 }
 
 func ErrorWithJSON(w http.ResponseWriter, message string, code int) {  
@@ -271,3 +271,46 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
+
+func deleteHandler(formatter *render.Render) http.HandlerFunc {  
+    return func(w http.ResponseWriter, req *http.Request) {
+	
+	var id Id 
+	//get mongodb connection
+    decoder := json.NewDecoder(req.Body)
+    err1 := decoder.Decode(&id)
+    server_val := Balance()
+
+	//connect to redis
+	conn,_, user := connectToRedis(redis_connect, id.SerialNumber)
+
+	//deleting in redis
+	if user.SerialNumber != "" {
+			fmt.Println("Deleting values at Redis End")			
+			//delete in redis
+			conn.Cmd("DEL", id.SerialNumber)
+	} else {
+			fmt.Println("There aren't any values in Redis")
+	}
+
+	// It wont delete the data from redis and mongo, as the server_val is not properly set. Hence we have to run del again.
+    s := getSession(server_val)
+    defer s.Close()
+    fmt.Println("Deleting the user")
+    
+    if err1 != nil {
+        ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
+        fmt.Println(err1)
+        return
+    }
+
+    //deleting in mongo
+    c := s.DB(mongodb_database).C(mongodb_collection)
+    err2 := c.Remove(id)
+
+    if err2 != nil {
+    	fmt.Println("Some Random error")
+    	return
+    	}
+	}
+}
