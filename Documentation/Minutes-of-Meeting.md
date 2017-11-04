@@ -97,9 +97,30 @@
 
 # Meeting Purpose:
 
-* Discussed about each team members outputs that they have achieved for week 1 and what improvements to do further with it.
+* Discussed about each team members outputs that they have achieved for week 5 and what improvements to do further with it.
 * Further discussed about how we have achieved front-end consistency using sockets and back-end consistency with CRDT and quorum based   replication approach.
 * Decided about the modules and functionalities to be completed for next week.
+* Efficiently set some targets for every team member to achieve by next week end.
+* Discussed about how effective coding methods/practices are maintained throughout the project.
+
+# Week 6
+
+<b>Date:</b> 11/01/2017  
+<b>Time:</b> 1:00 pm  
+<b>Place:</b> Student Union,San Jose State University
+
+<b>Members Present: </b> 
+1. Arun  
+2. Pranav  
+3. Raksha  
+4. Renu  
+5. Vivek
+
+# Meeting Purpose:
+
+* Decided about the modules and functionalities to be completed for next week.  
+* Discussed about the challenges and difficulties faced by every team member in week 6 implementation.
+* Discussed about how hashing method is going to be implemented to distribute the database calls.
 * Efficiently set some targets for every team member to achieve by next week end.
 * Discussed about how effective coding methods/practices are maintained throughout the project.
 
