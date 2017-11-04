@@ -51,4 +51,14 @@ The following are the core agile value of Commitment noticed in Week 5 of develo
 
 * Each team member have put good efforts to complete their module for this week and explained their module and effort taken to the entire team, so that each of us will be aware of good methods practiced within the team.
 
+## Commitment shown in Week 6
+
+The following are the core agile value of Commitment noticed in Week 6 of development:
+
+* In the week 6 of development and project discussions,all members were present for project discussions inspite of being busy with their other courses term projects.
+
+* All team members are coordinating efficiently with other modules and works.
+
+* Overall, the project development is going smoothly as every team member is putting equal efforts in their modules and helping other team members to achieve the same, which clearly shows strong commitment to work together as a team.
+
 
