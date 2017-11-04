@@ -68,5 +68,13 @@ In Week 5 of the development process:
 
 * We also understood the work done by all the team members in the meeting, which will help us integrate each other's work during later stages of the development process.
 
+## Updates from Week 6
+In Week 6 of the development process:
+* The team had a meeting where we discussed what each team member will be working on during the week.
+
+* The team members worked on their assigned tasks and committed their work on the project github repository with communicating about the updates done on the work.
+
+* All of us tried to understand each other's work by discussing the commits made by everyone.
+
 ## References:
 * [Agile Manifesto Principles](http://agilemanifesto.org/principles.html)
