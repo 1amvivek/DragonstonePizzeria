@@ -38,3 +38,9 @@ Highest business value features are delivered first to the customer by developme
 * The team discussed about the control flow for implementing the consensus theorom and gave constant feedbacks to get the right approach.
 * One of the team members came up with an idea to reduce the load on get requests and other team members gave positive feedback to it.
 * The team members discussed the work they did last week, problems they faced last week and the next week's plan in the stand up.
+
+**Updates from week 6**  
+
+* The team coordinated well with each other by reviewing the code written and giving feedback about other team members work.
+* The team members discussed the problems they faced and the solutions in the stand up meeting.
+* The team expressed concerns over merging the code in git and came up with a common standard by giving feedback
