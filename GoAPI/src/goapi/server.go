@@ -52,11 +52,7 @@ func NewServer() *negroni.Negroni {
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/orders/{order_id}", getHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
-<<<<<<< Updated upstream
-	//mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
-=======
 	mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
->>>>>>> Stashed changes
 	mx.HandleFunc("/order", deleteHandler(formatter)).Methods("DELETE")
 }
 
