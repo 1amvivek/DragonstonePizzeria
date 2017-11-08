@@ -52,7 +52,11 @@ func NewServer() *negroni.Negroni {
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/orders/{order_id}", getHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
+<<<<<<< Updated upstream
 	//mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
+=======
+	mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
+>>>>>>> Stashed changes
 	mx.HandleFunc("/order", deleteHandler(formatter)).Methods("DELETE")
 }
 
@@ -307,6 +311,50 @@ func deleteHandler(formatter *render.Render) http.HandlerFunc {
     //deleting in mongo
     c := s.DB(mongodb_database).C(mongodb_collection)
     err2 := c.Remove(id)
+
+    if err2 != nil {
+    	fmt.Println("Some Random error")
+    	return
+    	}
+	}
+}
+
+
+func putHandler(formatter *render.Render) http.HandlerFunc {  
+    return func(w http.ResponseWriter, req *http.Request) {
+	
+	var user User 
+	//get mongodb connection
+    decoder := json.NewDecoder(req.Body)
+    err1 := decoder.Decode(&user)
+    server_val := Balance()
+
+	//connect to redis
+	conn,_, name := connectToRedis(redis_connect, user.SerialNumber)
+
+	//deleting in redis
+	if name.SerialNumber != "" {
+			fmt.Println("Deleting values at Redis End")			
+			//delete in redis
+			conn.Cmd("DEL", name.SerialNumber)
+	} else {
+			fmt.Println("There aren't any values in Redis")
+	}
+
+    s := getSession(server_val)
+    defer s.Close()
+    fmt.Println("Updating the user")
+    
+    if err1 != nil {
+        ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
+        fmt.Println(err1)
+        return
+    }
+    fmt.Println(user.SerialNumber)
+
+	// It wont update the data from redis and mongo at the same time, as the server_val is not properly set. Hence we have to run update command again.
+    c := s.DB(mongodb_database).C(mongodb_collection)
+    err2 := c.Update(bson.M{"serialnumber": user.SerialNumber}, bson.M{"$set": bson.M{"name": user.Name}})
 
     if err2 != nil {
     	fmt.Println("Some Random error")

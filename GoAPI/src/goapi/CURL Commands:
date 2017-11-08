@@ -1,0 +1,13 @@
+CURL Commands: 
+
+GET: 
+curl -X GET localhost:3000/orders/1
+
+POST: 
+curl -X POST -d '{"SerialNumber":"1", "Name":"Adding"}' localhost:3000/order
+
+DELETE: 
+curl -X DELETE -d '{"serialnumber":"1"}' localhost:3000/order
+
+PUT: 
+curl -X PUT -d '{"SerialNumber":"1", "Name":"Updating"}' localhost:3000/order
