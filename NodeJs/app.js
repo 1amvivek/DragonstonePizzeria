@@ -2,6 +2,24 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var totalPrice = "$40";
+var Client = require('node-rest-client').Client;
+var client = new Client();
+
+
+var cartApiUrl = "http://localhost:9090/v1/starbucks/orders";
+var cartApiPostUrl = "http://localhost:9090/v1/starbucks/order";
+var CartPostArgs = {
+          "location": "take-out",
+          "items": [
+            {
+              "qty": 1,
+              "name": "latte",
+              "milk": "whole",
+              "size": "large"
+            }
+          ]
+        };
+
 //Handle from post data
 var bodyParser = require('body-parser');
 
@@ -18,7 +36,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-
+ 
 app.post('/login', function (req, res, next) {
   var email = req.body.email;
         var password = req.body.password;
@@ -94,15 +112,19 @@ io.sockets.on('connection', function(socket) {
   console.log('new client:' + socket.id);
   connections.push(socket.id); 
   io.sockets.emit('join', {user : socket.id });
-   
+  //sendRestGetRequest(cartApiUrl,123);
+    
 
   socket.on('addPizza', function (data) {
       console.log(data.pizzaId);
       //todo: rest call to golang pizza api
-      io.sockets.emit('addPizza',{pizzaId:data.pizzaId,totalPrice:totalPrice,user : socket.id});
-   
-    });
- 
+      var cartUuid = sendRestPostRequest(cartApiUrl,CartPostArgs,addPizzaCallBack);
+      console.log(cartUuid);
+     });
+  
+  addPizzaCallBack = function(cartUuid,data){
+      io.sockets.emit('addPizza',{pizzaId:data.pizzaId,totalPrice:totalPrice,user : socket.id,cartUuid : cartUuid});
+  }
   socket.on('removePizza', function (data) {
       console.log(data.pizzaId);
       //todo: rest call to golang pizza api
@@ -159,3 +181,32 @@ function removePlayer(item)
 var index = connections.indexOf(item);
 connections.splice(index, 1);
 }
+
+
+function sendRestGetRequest(url,uuid){
+// direct way 
+client.get(url, function (data, response) {
+    // parsed response body as js object 
+    console.log(data);
+
+    // raw response 
+    //console.log(response);
+});
+
+};
+
+
+function sendRestPostRequest(url,args,callback,socketData){
+// direct way 
+client.post(url,args, function (data, response) {
+    // parsed response body as js object 
+    console.log(data);
+    //replace with uuid varibale returned in post json response
+    var uuid = data[0].id;
+    console.log('uuid : '+uuid);
+    callback(uuid,socketData);
+    // raw response 
+    //console.log(response);
+});
+
+};

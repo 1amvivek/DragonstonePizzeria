@@ -14,7 +14,7 @@ app.controller("myCtrl", function($scope,$http) {
       $scope.modalPizzaDesc = $scope.catalog[x].desc;
       $scope.modalPizzaId = $scope.catalog[x].id;
     
-    var pop = document.getElementById('item_modal');
+      var pop = document.getElementById('item_modal');
       pop.style.display = "block";
       socket.emit('lookingAt',{'pizzaId' : $scope.modalPizzaId});
     }
@@ -57,13 +57,14 @@ app.controller("myCtrl", function($scope,$http) {
         $scope.$apply();
        });
 
-
     socket.on('addPizza', function (data) {
         console.log('message from server' + data.pizzaId + "price: " + data.totalPrice);
         $scope.products.push({name: $scope.catalog[data.pizzaId].name, quantity: 1, price : $scope.catalog[data.pizzaId].price});
         $scope.logs.push(''+data.user+' added ' + $scope.catalog[data.pizzaId].name + ' to the cart');
         $scope.totalPrice = data.totalPrice;
         $scope.$apply();
+        sessionStorage.cartUuid = data.cartUuid;
+        console.log(sessionStorage.cartUuid);
        });
 
     socket.on('removePizza', function (data) {
