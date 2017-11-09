@@ -11,19 +11,17 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
-	"github.com/gocql/gocql"
 )
 
 var redis_connect = "192.168.99.100:6379"
 var mongodb_server1 = "192.168.99.100:27017"
 var mongodb_server2 = "192.168.99.100:27018"
 var mongodb_server3 = "192.168.99.100:27019"
-var cassandra_server = "192.168.99.100:32769"
 var mongodb_database = "cmpe281"
 var mongodb_collection = "redistest"
 var i = 0
 var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3}
-//cassandra_server
+
 
 type (
 	// User represents the structure of our resource
@@ -175,18 +173,7 @@ func getSession(mongodb_bal_server string) *mgo.Session {
     return s
 }
 
-func getSession2(cassandra_bal_server string) *gocql.Session {  
-    // Connect to cassandra cluster
-    
-    fmt.Println("cassandra connecting to " + cassandra_bal_server)
-    
-	cluster := gocql.NewCluster(cassandra_bal_server)
-	cluster.Keyspace = "example"
-	cluster.Consistency = gocql.Quorum
-	session, _ := cluster.CreateSession()
-	
-    return session
-}
+
 
 
 
@@ -208,34 +195,12 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
     return func(w http.ResponseWriter, req *http.Request) {
 	
 	//get mongodb connection
-    var errs [] string
+  
     var user User
     decoder := json.NewDecoder(req.Body)
     err1 := decoder.Decode(&user)
 
     server_val := Balance()
-    if server_val== cassandra_server {
-    s := getSession2(server_val) 
-    defer s.Close()
-
-    fmt.Println("creating a new user")
-
-    // generate a unique UUID for this user
-    var id = gocql.TimeUUID()
-    // write data to Cassandra
-    if err1 := s.Query(`
-     INSERT INTO user (SerialNumber, id, Name) VALUES (?, ?, ?)`,
-	 user.SerialNumber,id, user.Name).Exec(); err1 != nil {
-		      errs = append(errs, err1.Error())
-    } 
-    w.Header().Set("Content-Type", "application/json")
-    w.Header().Set("Location", req.URL.Path+"/"+user.SerialNumber)
-    w.WriteHeader(http.StatusCreated)
-    w.WriteHeader(200)
-	 
-
-    return
-    }
     
     s := getSession(server_val)
     defer s.Close()
@@ -247,8 +212,7 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 
     
     c := s.DB(mongodb_database).C(mongodb_collection)
-
-    err2 := c.Insert(user)
+    
     
     if err2 != nil {
         if mgo.IsDup(err2) {
