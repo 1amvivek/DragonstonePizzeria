@@ -21,5 +21,8 @@ A pizza shop online store API and front-end, made as part of Fall '17 term proje
 # Kanban Flow Diagram
 [Google Sheet](https://docs.google.com/spreadsheets/d/1tjzxWAlYaej3zB1PyV0gQtKUqj9LLXnQ6AwsjMwqWHs/edit?ts=59c6b449#gid=2)  
 
+# Scrum Task Board and Burndown Chart
+[Scrum Board](https://docs.google.com/a/sjsu.edu/spreadsheets/d/1ma71mGEFl03OPnn6kf7FBHHm_3rsitmj2hpoN2ln9cE/edit?usp=sharing)
+
 # Architectural Overview (prone to change)
 ![Architectural Overview](./Documentation/Project%20Research/arch.png)
