@@ -13,6 +13,7 @@ import (
 	"math/big"
 	"net/http"
 	"strings"
+	"math/rand" 
 )
 
 var redis_connect = "192.168.99.100:6379"
@@ -198,44 +199,64 @@ func Balance() string {
 	return server
 }
 
-func postHandler(formatter *render.Render) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
+func postHandler(formatter *render.Render) http.HandlerFunc {  
+    return func(w http.ResponseWriter, req *http.Request) {
+	
+	//get mongodb connection
+    
+    var user1 User
+    decoder := json.NewDecoder(req.Body)
+    err5 := decoder.Decode(&user1)
 
-		//get mongodb connection
 
-		var user User
-		decoder := json.NewDecoder(req.Body)
-		err1 := decoder.Decode(&user)
+    server_val := Balance()
+    
+    s := getSession(server_val)
+    defer s.Close()
+    
+    if err5 != nil {
+        ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
+        return
+    }
+    
+    //user1.uid = rand.Int()
+    var uuid = rand.Int();
+    fmt.Println(uuid)
+    
+    var resp1 = fmt.Sprintf("{'uuid' : %d }",uuid)
+    
+    Jsonvalue, err5 := json.Marshal(resp1)
 
-		server_val := Balance()
+    c := s.DB(mongodb_database).C(mongodb_collection)
 
-		s := getSession(server_val)
-		defer s.Close()
+   err6 := c.Insert(
+   struct{SerialNumber, Name interface{}}{ 
+      SerialNumber: rand.Int(), 
+      Name: user1.Name })
+    
+    
+    if err6 != nil {
+        if mgo.IsDup(err6) {
+        	    fmt.Println("exists already")
+                ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
+                return
+        }
 
-		if err1 != nil {
-			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
-			return
-		}
 
-		c := s.DB(mongodb_database).C(mongodb_collection)
-		c.Insert(user)
+        ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
+        log.Println("Failed insert user: ", err6)
+        return
+        }
+   
+   
+    w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Location", req.URL.Path+"/"+user1.SerialNumber)
+    w.WriteHeader(http.StatusCreated)
+    w.WriteHeader(200)
+   
+    w.Write(Jsonvalue)
+   
 
-		// if err2 != nil {
-		// 	if mgo.IsDup(err2) {
-		// 		fmt.Println("exists already")
-		// 		ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
-		// 		return
-		// 	}
-
-		// 	ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
-		// 	log.Println("Failed insert user: ", err2)
-		// 	return
-		// }
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Location", req.URL.Path+"/"+user.SerialNumber)
-		w.WriteHeader(http.StatusCreated)
-		w.WriteHeader(200)
 	}
 }
 
