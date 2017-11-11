@@ -55,6 +55,11 @@ Here, courage was demonstrated in the following instances:
 * In a demonstration of courage, **the team was able to collaborate and speak out when we noticed errors as well as courageously admit mistakes** in order to have them corrected quickly.  
 * The team was able to create a working REST endpoints using Go with multiple Docker containers with minimal to no experience in the fields in a **courageous head-first dive**.   
 * **Courageously taking ownership** of parts of the code ensured that members of the team were actively involved in the development and multiple parts of the system were developed simultaneously.  
+
+
+## Courage shown in Week 7
+* In a demonstration of courage, **the team was able to use docker-compose yaml to set up the test environment on local machines with ease**   
+* **With face to face open communication and courageous collaboration**, the team was able to integrate different independently tested modules with ease.   
   
    
 ## References
