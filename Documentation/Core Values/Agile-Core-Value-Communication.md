@@ -76,5 +76,13 @@ In Week 6 of the development process:
 
 * All of us tried to understand each other's work by discussing the commits made by everyone.
 
+## Updates from Week 7
+In Week 7 of the development process:
+* The team had a weekly Scrum meeting where we discussed what each team member will be working on during the next week.
+
+* The team members had an internal review on each other's work and had a discussion about the progress made. The team members explained what each person had worked on.
+
+* The team members discussed the issues they were facing while working on their modules. We sat together and tried to discuss how to resolve the issues.
+
 ## References:
 * [Agile Manifesto Principles](http://agilemanifesto.org/principles.html)
