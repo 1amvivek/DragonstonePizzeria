@@ -44,3 +44,9 @@ Highest business value features are delivered first to the customer by developme
 * The team coordinated well with each other by reviewing the code written and giving feedback about other team members work.
 * The team members discussed the problems they faced and the solutions in the stand up meeting.
 * The team expressed concerns over merging the code in git and came up with a common standard by giving feedback
+
+**Updates from week 7**  
+
+* The team reviewed the other team members modules and gave feedback to each other.
+* The team coordinated with each other for the dependencies between their modules and discussed about the solutions.
+* The team shared the challenges they faced in the stand up and got help from other members.
