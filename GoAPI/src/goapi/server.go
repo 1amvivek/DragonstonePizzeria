@@ -11,9 +11,9 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"math/big"
+	"math/rand"
 	"net/http"
 	"strings"
-	"math/rand" 
 )
 
 var redis_connect = "192.168.99.100:6379"
@@ -112,16 +112,33 @@ func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, b
 	return conn, cacheFlag, result
 }
 
-func getNodes(uuid big.Int) []string {
-	temp := uuid.Int64() % int64(len(servers))
-	var start int
-	start = int(temp)
+func getNodes(uuid int) []string {
+	start := uuid % len(servers)
 	end := start + len(servers)/2 + 1
-	if end < len(servers)-1 {
+	fmt.Println(start)
+	fmt.Println(end)
+	if end <= len(servers)-1 {
 		return servers[start:end]
 	} else {
+		end = end - len(servers)
+		fmt.Println("end changed")
 		return append(servers[start:], servers[:end]...)
 	}
+}
+
+func deleteHelper(server_val string, serialNumber string) {
+	s := getSession(server_val)
+	defer s.Close()
+	fmt.Println("Deleting the user")
+	user := getFromMongo(server_val, serialNumber)
+	//deleting in mongo
+	c := s.DB(mongodb_database).C(mongodb_collection)
+	err2 := c.Update(bson.M{"serialnumber": serialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": -1}})
+
+	if err2 != nil {
+		fmt.Println("Some Random error")
+	}
+
 }
 
 // API GET Handler
@@ -199,63 +216,58 @@ func Balance() string {
 	return server
 }
 
-func postHandler(formatter *render.Render) http.HandlerFunc {  
-    return func(w http.ResponseWriter, req *http.Request) {
-	
-	//get mongodb connection
-    
-    var user1 User
-    decoder := json.NewDecoder(req.Body)
-    err5 := decoder.Decode(&user1)
+func postHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
 
+		//get mongodb connection
 
-    server_val := Balance()
-    
-    s := getSession(server_val)
-    defer s.Close()
-    
-    if err5 != nil {
-        ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
-        return
-    }
-    
-    //user1.uid = rand.Int()
-    var uuid = rand.Int();
-    fmt.Println(uuid)
-    
-    var resp1 = fmt.Sprintf("{'uuid' : %d }",uuid)
-    
-    Jsonvalue, err5 := json.Marshal(resp1)
+		var user1 User
+		decoder := json.NewDecoder(req.Body)
+		err5 := decoder.Decode(&user1)
 
-    c := s.DB(mongodb_database).C(mongodb_collection)
+		server_val := Balance()
 
-   err6 := c.Insert(
-   struct{SerialNumber, Name interface{}}{ 
-      SerialNumber: rand.Int(), 
-      Name: user1.Name })
-    
-    
-    if err6 != nil {
-        if mgo.IsDup(err6) {
-        	    fmt.Println("exists already")
-                ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
-                return
-        }
+		s := getSession(server_val)
+		defer s.Close()
 
+		if err5 != nil {
+			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
+			return
+		}
 
-        ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
-        log.Println("Failed insert user: ", err6)
-        return
-        }
-   
-   
-    w.Header().Set("Content-Type", "application/json")
-    w.Header().Set("Location", req.URL.Path+"/"+user1.SerialNumber)
-    w.WriteHeader(http.StatusCreated)
-    w.WriteHeader(200)
-   
-    w.Write(Jsonvalue)
-   
+		//user1.uid = rand.Int()
+		var uuid = rand.Int()
+		fmt.Println(uuid)
+
+		var resp1 = fmt.Sprintf("{'uuid' : %d }", uuid)
+
+		Jsonvalue, err5 := json.Marshal(resp1)
+
+		c := s.DB(mongodb_database).C(mongodb_collection)
+
+		err6 := c.Insert(
+			struct{ SerialNumber, Name interface{} }{
+				SerialNumber: rand.Int(),
+				Name:         user1.Name})
+
+		if err6 != nil {
+			if mgo.IsDup(err6) {
+				fmt.Println("exists already")
+				ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
+				return
+			}
+
+			ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
+			log.Println("Failed insert user: ", err6)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Location", req.URL.Path+"/"+user1.SerialNumber)
+		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(200)
+
+		w.Write(Jsonvalue)
 
 	}
 }
@@ -263,42 +275,30 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 func deleteHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		var id Id
-		//get mongodb connection
-		decoder := json.NewDecoder(req.Body)
-		err1 := decoder.Decode(&id)
-		server_val := Balance()
+		//get variables
+		params := mux.Vars(req)
+		var serialNumber string = params["order_id"]
 
 		//connect to redis
-		conn, _, user := connectToRedis(redis_connect, id.SerialNumber)
+		conn, cacheFlag, _ := connectToRedis(redis_connect, serialNumber)
 
 		//deleting in redis
-		if user.SerialNumber != "" {
+		if cacheFlag {
+			fmt.Println("There aren't any values in Redis")
+		} else {
 			fmt.Println("Deleting values at Redis End")
 			//delete in redis
-			conn.Cmd("DEL", id.SerialNumber)
-		} else {
-			fmt.Println("There aren't any values in Redis")
+			conn.Cmd("DEL", serialNumber)
+
 		}
-
-		// It wont delete the data from redis and mongo, as the server_val is not properly set. Hence we have to run del again.
-		s := getSession(server_val)
-		defer s.Close()
-		fmt.Println("Deleting the user")
-
+		serialNumberInt, err1 := strconv.Atoi(serialNumber)
 		if err1 != nil {
-			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
-			fmt.Println(err1)
-			return
+			fmt.Println("could not convert to integer")
 		}
-
-		//deleting in mongo
-		c := s.DB(mongodb_database).C(mongodb_collection)
-		err2 := c.Remove(id)
-
-		if err2 != nil {
-			fmt.Println("Some Random error")
-			return
+		// It wont delete the data from redis and mongo, as the server_val is not properly set. Hence we have to run del again.
+		servers := getNodes(serialNumberInt)
+		for _, value := range servers {
+			deleteHelper(value, serialNumber)
 		}
 	}
 }
