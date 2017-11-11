@@ -126,6 +126,26 @@ func getNodes(uuid int) []string {
 	}
 }
 
+func updateHelper(server_val string, user User) {
+	s := getSession(server_val)
+	defer s.Close()
+	fmt.Println("Updating the user")
+	var current User
+	// It wont update the data from redis and mongo at the same time, as the server_val is not properly set. Hence we have to run update command again.
+	c := s.DB(mongodb_database).C(mongodb_collection)
+	err := c.Find(bson.M{"serialnumber": user.SerialNumber}).One(&current)
+	if err != nil {
+		fmt.Println("no object to update")
+		return
+	}
+	err2 := c.Update(bson.M{"serialnumber": user.SerialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": (current.Clock + 1)}})
+
+	if err2 != nil {
+		fmt.Println("Some Random error")
+		return
+	}
+}
+
 func deleteHelper(server_val string, serialNumber string) {
 	s := getSession(server_val)
 	defer s.Close()
@@ -310,8 +330,17 @@ func putHandler(formatter *render.Render) http.HandlerFunc {
 		//get mongodb connection
 		decoder := json.NewDecoder(req.Body)
 		err1 := decoder.Decode(&user)
-		server_val := Balance()
 
+		if err1 != nil {
+			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
+			fmt.Println(err1)
+			return
+		}
+
+		serialNumber, err := strconv.Atoi(user.SerialNumber)
+		if err != nil {
+			fmt.Println("could not convert serialnumber to int")
+		}
 		//connect to redis
 		conn, _, name := connectToRedis(redis_connect, user.SerialNumber)
 
@@ -323,25 +352,10 @@ func putHandler(formatter *render.Render) http.HandlerFunc {
 		} else {
 			fmt.Println("There aren't any values in Redis")
 		}
-
-		s := getSession(server_val)
-		defer s.Close()
-		fmt.Println("Updating the user")
-
-		if err1 != nil {
-			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
-			fmt.Println(err1)
-			return
+		servers := getNodes(int(serialNumber))
+		for _, value := range servers {
+			updateHelper(value, user)
 		}
-		fmt.Println(user.SerialNumber)
 
-		// It wont update the data from redis and mongo at the same time, as the server_val is not properly set. Hence we have to run update command again.
-		c := s.DB(mongodb_database).C(mongodb_collection)
-		err2 := c.Update(bson.M{"serialnumber": user.SerialNumber}, bson.M{"$set": bson.M{"name": user.Name}})
-
-		if err2 != nil {
-			fmt.Println("Some Random error")
-			return
-		}
 	}
 }
