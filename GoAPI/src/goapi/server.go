@@ -10,10 +10,9 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"log"
-	"math/big"
 	"math/rand"
 	"net/http"
-	"strings"
+	"strconv"
 )
 
 var redis_connect = "192.168.99.100:6379"
@@ -54,7 +53,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/orders/{order_id}", getHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
-	mx.HandleFunc("/order", deleteHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("/order/{order_id}", deleteHandler(formatter)).Methods("DELETE")
 }
 
 func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
@@ -101,7 +100,6 @@ func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, b
 	if err != nil {
 		//not in redis
 		fmt.Println("couldn't find values in Redis")
-
 		cacheFlag = true
 
 	}
@@ -161,6 +159,54 @@ func deleteHelper(server_val string, serialNumber string) {
 
 }
 
+func postHelper(server_val string, user1 User) {
+	s := getSession(server_val)
+	defer s.Close()
+
+	c := s.DB(mongodb_database).C(mongodb_collection)
+
+	err6 := c.Insert(user1)
+
+	if err6 != nil {
+		if mgo.IsDup(err6) {
+			fmt.Println("exists already")
+			//ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
+			//return
+		}
+
+		//ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
+		log.Println("Failed insert user: ", err6)
+		return
+	}
+}
+
+func getSession(mongodb_bal_server string) *mgo.Session {
+	// Connect to mongo cluster
+	//mongodb_bal_server := Balance()
+	fmt.Println("mongo connecting to " + mongodb_bal_server)
+	s, err := mgo.Dial(mongodb_bal_server)
+
+	// Check if connection error, is mongo running?
+	if err != nil {
+		panic(err)
+	}
+	s.SetMode(mgo.Monotonic, true)
+	return s
+}
+
+// Balance returns one of the servers based using round-robin algorithm
+func Balance() string {
+	server := servers[i]
+	i++
+
+	// reset the counter and start from the beginning
+	// if we reached the end of servers
+	if i >= len(servers) {
+		i = 0
+	}
+	return server
+}
+
 // API GET Handler
 func getHandler(formatter *render.Render) http.HandlerFunc {
 
@@ -171,14 +217,15 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		cacheFlag := false
 		//connect to redis
 		conn, cacheFlag, name := connectToRedis(redis_connect, serialNumber)
-
+		serialNumberInt, err1 := strconv.Atoi(serialNumber)
+		if err1 != nil {
+			fmt.Println("could not convert to integer")
+		}
 		if cacheFlag {
 			fmt.Println("The values are fetched from Mongo")
 			var result User
 			max := 0
-			var id big.Int
-			id.SetString(strings.Replace(serialNumber, "-", "", 4), 16)
-			servers := getNodes(id)
+			servers := getNodes(serialNumberInt)
 			for _, value := range servers {
 				temp := getFromMongo(value, serialNumber)
 				if int(temp.Clock) > max {
@@ -209,33 +256,6 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 
 }
 
-func getSession(mongodb_bal_server string) *mgo.Session {
-	// Connect to mongo cluster
-	//mongodb_bal_server := Balance()
-	fmt.Println("mongo connecting to " + mongodb_bal_server)
-	s, err := mgo.Dial(mongodb_bal_server)
-
-	// Check if connection error, is mongo running?
-	if err != nil {
-		panic(err)
-	}
-	s.SetMode(mgo.Monotonic, true)
-	return s
-}
-
-// Balance returns one of the servers based using round-robin algorithm
-func Balance() string {
-	server := servers[i]
-	i++
-
-	// reset the counter and start from the beginning
-	// if we reached the end of servers
-	if i >= len(servers) {
-		i = 0
-	}
-	return server
-}
-
 func postHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
@@ -244,12 +264,6 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 		var user1 User
 		decoder := json.NewDecoder(req.Body)
 		err5 := decoder.Decode(&user1)
-
-		server_val := Balance()
-
-		s := getSession(server_val)
-		defer s.Close()
-
 		if err5 != nil {
 			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
 			return
@@ -257,29 +271,13 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 
 		//user1.uid = rand.Int()
 		var uuid = rand.Int()
-		fmt.Println(uuid)
-
 		var resp1 = fmt.Sprintf("{'uuid' : %d }", uuid)
-
 		Jsonvalue, err5 := json.Marshal(resp1)
-
-		c := s.DB(mongodb_database).C(mongodb_collection)
-
-		err6 := c.Insert(
-			struct{ SerialNumber, Name interface{} }{
-				SerialNumber: rand.Int(),
-				Name:         user1.Name})
-
-		if err6 != nil {
-			if mgo.IsDup(err6) {
-				fmt.Println("exists already")
-				ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
-				return
-			}
-
-			ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
-			log.Println("Failed insert user: ", err6)
-			return
+		servers := getNodes(uuid)
+		user1.SerialNumber = strconv.Itoa(uuid)
+		user1.Clock = 1
+		for _, value := range servers {
+			postHelper(value, user1)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
