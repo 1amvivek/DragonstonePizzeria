@@ -124,4 +124,24 @@
 * Efficiently set some targets for every team member to achieve by next week end.
 * Discussed about how effective coding methods/practices are maintained throughout the project.
 
+# Week 7
+
+<b>Date:</b> 11/07/2017  
+<b>Time:</b> 1:00 pm  
+<b>Place:</b> Student Union,San Jose State University
+
+<b>Members Present: </b> 
+1. Arun  
+2. Pranav 
+3. Raksha  
+4. Renu  
+5. Vivek
+
+# Meeting Purpose:
+
+* Discussed about the challenges and difficulties faced by every team member in week 6 implementation.
+* Decided about the modules and functionalities to be completed for next week.
+* Efficiently set some targets for every team member to achieve by next week end.
+* Discussed efficient inplementationand time management to complete the project well before deadline.
+
 
