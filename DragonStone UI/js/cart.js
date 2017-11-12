@@ -2,7 +2,7 @@ var socket = io.connect('http://localhost:8080');
 var app = angular.module("myShoppingList", []); 
 app.controller("myCtrl", function($scope,$http) {
     $scope.quantity = 1;
-    $scope.totalPrice = "$58";
+    $scope.totalPrice = "$0";
     $scope.products = [];
     $scope.logs =  ["Arun Created Group Cart"];
     
@@ -21,7 +21,7 @@ app.controller("myCtrl", function($scope,$http) {
 
     $scope.addItem = function () {
         console.log('add pizza' + $scope.modalPizzaId);
-        socket.emit('addPizza',{'pizzaId' : $scope.modalPizzaId});
+        socket.emit('addPizza',{'pizzaId' : $scope.modalPizzaId,'pizzaName' : $scope.catalog[$scope.modalPizzaId].name});
        }
 
     $scope.removeItem = function (x) {
@@ -59,9 +59,9 @@ app.controller("myCtrl", function($scope,$http) {
 
     socket.on('addPizza', function (data) {
         console.log('message from server' + data.pizzaId + "price: " + data.totalPrice);
-        $scope.products.push({name: $scope.catalog[data.pizzaId].name, quantity: 1, price : $scope.catalog[data.pizzaId].price});
-        $scope.logs.push(''+data.user+' added ' + $scope.catalog[data.pizzaId].name + ' to the cart');
-        $scope.totalPrice = data.totalPrice;
+        $scope.products.push({name: data.pizzaName, quantity: 1, price : $scope.catalog[data.pizzaId].price});
+        $scope.logs.push(data.logs);
+        calculateTotal();
         $scope.$apply();
         sessionStorage.cartUuid = data.cartUuid;
         console.log(sessionStorage.cartUuid);
@@ -70,7 +70,7 @@ app.controller("myCtrl", function($scope,$http) {
     socket.on('removePizza', function (data) {
         console.log('message from server' + data.pizzaId + "price: " + data.totalPrice);
         $scope.products.splice(data.pizzaId, 1);
-        $scope.totalPrice = data.totalPrice;
+        calculateTotal();
         $scope.logs.push(''+data.user+' removed ' + $scope.catalog[data.pizzaId].name + ' from the cart');
         $scope.$apply();
        });
@@ -78,7 +78,7 @@ app.controller("myCtrl", function($scope,$http) {
     socket.on('addQuantity', function (data) {
         console.log('message from server - addQuantity:' + data.pizzaId);
         $scope.products[data.pizzaId].quantity++;
-        $scope.totalPrice = data.totalPrice;
+        calculateTotal();
         $scope.logs.push(''+data.user+' added quantity for ' + $scope.catalog[data.pizzaId].name); 
         $scope.$apply();
        });
@@ -86,7 +86,7 @@ app.controller("myCtrl", function($scope,$http) {
     socket.on('reduceQuantity', function (data) {
         console.log('message from server - reduceQuantity:' + data.pizzaId);
         $scope.products[data.pizzaId].quantity--;
-        $scope.totalPrice = data.totalPrice;
+        calculateTotal();
         $scope.logs.push(''+data.user+' reduced quantity for ' + $scope.catalog[data.pizzaId].name);
         $scope.$apply();
        });
@@ -102,4 +102,14 @@ app.controller("myCtrl", function($scope,$http) {
         socket.emit('closeConnection');
     }
 
+    calculateTotal = function(){
+      var products = $scope.products;
+      var totalPrice = 0;
+      for(var i=0;i<products.length;i++){ 
+        var price = Number((products[i].price).replace("$", ""))
+        var amount =  price * products[i].quantity;
+        totalPrice = totalPrice + amount;
+      }
+      $scope.totalPrice = "$" + totalPrice;
+    }
 });
