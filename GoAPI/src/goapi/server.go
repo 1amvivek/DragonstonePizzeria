@@ -31,9 +31,6 @@ type (
 		Name         string `json: "name"`
 		Clock        int    `json: "clock`
 	}
-	Id struct {
-		SerialNumber string `json: "id"`
-	}
 )
 
 // NewServer configures and returns a Server.
@@ -66,18 +63,18 @@ func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
 
 func getFromMongo(session *mgo.Session, serialNumber string) User {
 
-    var result User
-    //get from mongo
-    if session != nil {
-        c := session.DB(mongodb_database).C(mongodb_collection)
-        err := c.Find(bson.M{"serialnumber": serialNumber}).One(&result)
-        if err != nil {
-            //could not find in mongo (inserting into mongo for now. TODO: Make proper)
-            // c.Insert(bson.M{"SerialNumber": "1", "Name": "Sample"})
-            fmt.Println("Some Error in Get, maybe data is not present")
-        }
-    }
-    return result
+	var result User
+	//get from mongo
+	if session != nil {
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		err := c.Find(bson.M{"serialnumber": serialNumber}).One(&result)
+		if err != nil {
+			//could not find in mongo (inserting into mongo for now. TODO: Make proper)
+			// c.Insert(bson.M{"SerialNumber": "1", "Name": "Sample"})
+			fmt.Println("Some Error in Get, maybe data is not present")
+		}
+	}
+	return result
 
 }
 
@@ -119,76 +116,78 @@ func getNodes(uuid int) []string {
 }
 
 func updateHelper(server_val string, user User) {
-    s := getSession(server_val)
-    if s != nil {
-        defer s.Close()
-        fmt.Println("Updating the user")
-        var current User
-        // It wont update the data from redis and mongo at the same time, as the server_val is not properly set. Hence we have to run update command again.
-        c := s.DB(mongodb_database).C(mongodb_collection)
-        err := c.Find(bson.M{"serialnumber": user.SerialNumber}).One(&current)
-        if err != nil {
-            fmt.Println("no object to update")
-            return
-        }
-        err2 := c.Update(bson.M{"serialnumber": user.SerialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": (current.Clock + 1)}})
+	s := getSession(server_val)
+	if s != nil {
+		defer s.Close()
+		fmt.Println("Updating the user")
+		var current User
+		// It wont update the data from redis and mongo at the same time, as the server_val is not properly set. Hence we have to run update command again.
+		c := s.DB(mongodb_database).C(mongodb_collection)
+		err := c.Find(bson.M{"serialnumber": user.SerialNumber}).One(&current)
+		if err != nil {
+			fmt.Println("no object to update")
+			return
+		}
+		err2 := c.Update(bson.M{"serialnumber": user.SerialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": (current.Clock + 1)}})
 
-        if err2 != nil {
-            fmt.Println("Some Random error")
-            return
-        }
-    }
+		if err2 != nil {
+			fmt.Println("Some Random error")
+			return
+		}
+	}
 }
 
 func deleteHelper(server_val string, serialNumber string) {
-    s := getSession(server_val)
-    if s != nil {
-        defer s.Close()
-        fmt.Println("Deleting the user")
-        user := getFromMongo(s, serialNumber)
-        //deleting in mongo
-        c := s.DB(mongodb_database).C(mongodb_collection)
-        err2 := c.Update(bson.M{"serialnumber": serialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": -1}})
+	s := getSession(server_val)
+	if s != nil {
+		defer s.Close()
+		fmt.Println("Deleting the user")
+		user := getFromMongo(s, serialNumber)
+		//deleting in mongo
+		c := s.DB(mongodb_database).C(mongodb_collection)
+		err2 := c.Update(bson.M{"serialnumber": serialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": -1}})
 
-        if err2 != nil {
-            fmt.Println("Some Random error")
-        }
-    }
+		if err2 != nil {
+			fmt.Println("Some Random error")
+		}
+	}
 
 }
 
 func postHelper(server_val string, user1 User) {
-    s := getSession(server_val)
-    if s != nil {
-        defer s.Close()
+	s := getSession(server_val)
+	if s != nil {
+		defer s.Close()
 
-        c := s.DB(mongodb_database).C(mongodb_collection)
+		c := s.DB(mongodb_database).C(mongodb_collection)
 
-        err6 := c.Insert(user1)
+		err6 := c.Insert(user1)
 
-        if err6 != nil {
-            if mgo.IsDup(err6) {
-                fmt.Println("exists already")
-                //ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
-                //return
-            }
+		if err6 != nil {
+			if mgo.IsDup(err6) {
+				fmt.Println("exists already")
+				//ErrorWithJSON(w, "User already exists", http.StatusBadRequest)
+				//return
+			}
 
-            //ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
-            log.Println("Failed insert user: ", err6)
-            return
-        }
-    }
+			//ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
+			log.Println("Failed insert user: ", err6)
+			return
+		}
+	}
 }
 
 func getSession(mongodb_bal_server string) *mgo.Session {
-    fmt.Println("mongo connecting to " + mongodb_bal_server)
-    s, err := mgo.Dial(mongodb_bal_server)
+	// Connect to mongo cluster
+	//mongodb_bal_server := Balance()
+	fmt.Println("mongo connecting to " + mongodb_bal_server)
+	s, err := mgo.Dial(mongodb_bal_server)
 
-    if err == nil {
-        s.SetMode(mgo.Monotonic, true)
-    }
+	if err == nil {
+		s.SetMode(mgo.Monotonic, true)
+	}
 
-    return s
+	return s
 }
 
 // Balance returns one of the servers based using round-robin algorithm
@@ -212,6 +211,8 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		params := mux.Vars(req)
 		var serialNumber string = params["order_id"]
 		cacheFlag := false
+		var connections [10]*mgo.Session
+		var objects [10]User
 		//connect to redis
 		conn, cacheFlag, name := connectToRedis(redis_connect, serialNumber)
 		serialNumberInt, err1 := strconv.Atoi(serialNumber)
@@ -223,19 +224,28 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 			var result User
 			max := 0
 			servers := getNodes(serialNumberInt)
-			for _, value := range servers {
-				temp := getFromMongo(value, serialNumber)
-				if int(temp.Clock) > max {
-					result = temp
-					max = int(temp.Clock)
+			for index, value := range servers {
+				connections[index] = getSession(value)
+				objects[index] = getFromMongo(connections[index], serialNumber)
+			}
+			for _, object := range objects {
+				if int(object.Clock) > max {
+					result = object
+					max = int(object.Clock)
 				}
 			}
 			formatter.JSON(w, http.StatusOK, result)
 
-			for _, value := range servers {
-				temp := getFromMongo(value, serialNumber)
-				if temp.Clock != result.Clock {
-					//WRITE VALUE BACK TO MONGO
+			for index, object := range objects {
+				if object.Clock != result.Clock {
+					if connections[index] != nil {
+						c := connections[index].DB(mongodb_database).C(mongodb_collection)
+						err2 := c.Update(bson.M{"serialnumber": result.SerialNumber}, bson.M{"$set": bson.M{"name": result.Name, "clock": (result.Clock)}})
+						if err2 != nil {
+							fmt.Println("Some Random error")
+							return
+						}
+					}
 				}
 			}
 
