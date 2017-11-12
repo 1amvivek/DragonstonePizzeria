@@ -4,21 +4,27 @@ var io = require('socket.io')(server);
 var totalPrice = "$40";
 var Client = require('node-rest-client').Client;
 var client = new Client();
+var request = require("request");
 
-
-var cartApiUrl = "http://localhost:9090/v1/starbucks/orders";
+//sample REST API URL and arguments
+var cartApiGetUrl = "http://localhost:9090/v1/starbucks/orders";
 var cartApiPostUrl = "http://localhost:9090/v1/starbucks/order";
+//change the data to respective post data
 var CartPostArgs = {
-          "location": "take-out",
-          "items": [
-            {
-              "qty": 1,
-              "name": "latte",
-              "milk": "whole",
-              "size": "large"
-            }
-          ]
-        };
+          data: {
+                  location: "take-out",
+                  items: [
+                    {
+                      qty: 1,
+                      name: "latte",
+                      milk: "whole",
+                      size: "large"
+                    }
+                  ]
+                },
+          headers: { "Content-Type": "application/json" }
+  };
+
 
 //Handle from post data
 var bodyParser = require('body-parser');
@@ -115,40 +121,48 @@ io.sockets.on('connection', function(socket) {
   //sendRestGetRequest(cartApiUrl,123);
     
 
-  socket.on('addPizza', function (data) {
-      console.log(data.pizzaId);
-      //todo: rest call to golang pizza api
-      var cartUuid = sendRestPostRequest(cartApiUrl,CartPostArgs,addPizzaCallBack);
-      console.log(cartUuid);
+  socket.on('addPizza', function (socketData) {
+      //console.log(data.pizzaId);
+      //edit args to respective args from selected pizza details
+      //selected pizza details is available in socketData
+      var args = CartPostArgs;
+      args.data.location = socketData.pizzaId;
+      args.data.items[0].qty = 1;
+      args.data.items[0].name = socketData.pizzaName;
+      sendRestPostRequest(cartApiPostUrl,args,addPizzaCallBack,socketData);
      });
   
-  addPizzaCallBack = function(cartUuid,data){
-      io.sockets.emit('addPizza',{pizzaId:data.pizzaId,totalPrice:totalPrice,user : socket.id,cartUuid : cartUuid});
+  addPizzaCallBack = function(postData,socketData){
+      console.log("Callback");
+      //replace with uuid variable in post json response data
+      console.log("uuid : " + postData.id);
+      var logs = (socket.id +' added ' + socketData.pizzaName + ' to the cart');
+      io.sockets.emit('addPizza',{pizzaId:socketData.pizzaId,pizzaName : socketData.pizzaName, user : socket.id,cartUuid : postData.id,logs : logs});
   }
-  socket.on('removePizza', function (data) {
-      console.log(data.pizzaId);
+  socket.on('removePizza', function (socketData) {
+      console.log(socketData.pizzaId);
       //todo: rest call to golang pizza api
-      io.sockets.emit('removePizza', { pizzaId: data.pizzaId,totalPrice:totalPrice,user : socket.id });
+      io.sockets.emit('removePizza', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id });
    
     });
 
-  socket.on('addQuantity', function (data) {
-      console.log(data.pizzaId);
+  socket.on('addQuantity', function (socketData) {
+      console.log(socketData.pizzaId);
       //todo: rest call to golang pizza api
-      io.sockets.emit('addQuantity', { pizzaId: data.pizzaId,totalPrice:totalPrice,user : socket.id });
+      io.sockets.emit('addQuantity', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id });
    
     });
 
-  socket.on('reduceQuantity', function (data) {
-      console.log(data.pizzaId);
+  socket.on('reduceQuantity', function (socketData) {
+      console.log(socketData.pizzaId);
       //todo: rest call to golang pizza api
-      io.sockets.emit('reduceQuantity', { pizzaId: data.pizzaId,totalPrice:totalPrice,user : socket.id });
+      io.sockets.emit('reduceQuantity', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id });
    
     });
 
-  socket.on('lookingAt',function(data){
+  socket.on('lookingAt',function(socketData){
       //todo: rest call to golang pizza api
-      io.sockets.emit('lookingAt', { pizzaId: data.pizzaId,user : socket.id });
+      io.sockets.emit('lookingAt', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id });
   });
 
   socket.on('getCatalog',function(){
@@ -195,18 +209,18 @@ client.get(url, function (data, response) {
 
 };
 
-
 function sendRestPostRequest(url,args,callback,socketData){
 // direct way 
+console.log(url);
+console.log(args);
 client.post(url,args, function (data, response) {
     // parsed response body as js object 
     console.log(data);
     //replace with uuid varibale returned in post json response
-    var uuid = data[0].id;
-    console.log('uuid : '+uuid);
-    callback(uuid,socketData);
+    callback(data,socketData);
     // raw response 
     //console.log(response);
 });
+
 
 };
