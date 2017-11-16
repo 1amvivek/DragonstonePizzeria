@@ -4,7 +4,8 @@ app.controller("myCtrl", function($scope,$http) {
     $scope.quantity = 1;
     $scope.totalPrice = "$0";
     $scope.products = [];
-    $scope.logs =  ["Arun Created Group Cart"];
+    $scope.logs =  [];
+    $scope.shoppingCartText = "Your Cart";
     
     socket.emit('getCatalog');
     $scope.showModal = function (x) {
@@ -19,6 +20,20 @@ app.controller("myCtrl", function($scope,$http) {
       socket.emit('lookingAt',{'pizzaId' : $scope.modalPizzaId});
     }
 
+    $scope.createGroupCart = function(x){
+         var groupName = document.getElementById("groupName").value;
+         var yourName = document.getElementById("yourName").value;
+         sessionStorage["myName"] = yourName;
+         socket.emit('createGroupCart', { groupName: groupName, yourName:sessionStorage.myName }); 
+    }
+
+    $scope.joinGroupCart = function(x){
+         var SerialNumber = document.getElementById("groupId").value;
+         var yourName = document.getElementById("newUserName").value;
+         sessionStorage["myName"] = yourName;
+         socket.emit('joinGroupCart', { SerialNumber: SerialNumber, yourName:sessionStorage.myName }); 
+    }
+
     $scope.addItem = function () {
         console.log('add pizza' + $scope.modalPizzaId);
         socket.emit('addPizza',{'pizzaId' : $scope.modalPizzaId,'pizzaName' : $scope.catalog[$scope.modalPizzaId].name});
@@ -30,7 +45,7 @@ app.controller("myCtrl", function($scope,$http) {
        }
     $scope.addQuantity = function(x){
        console.log('add quantity' + x)
-       socket.emit('addQuantity', { pizzaId: x }); 
+       socket.emit('addQuantity', { pizzaId: x,'pizzaName' : $scope.catalog[$scope.modalPizzaId].name }); 
     }
 
     $scope.reduceQuantity = function(x){
@@ -39,6 +54,16 @@ app.controller("myCtrl", function($scope,$http) {
          socket.emit('reduceQuantity', { pizzaId: x }); 
     }
 
+    socket.on('createGroupCart', function (data) {
+        sessionStorage.groupSerialNumber = data.response.SerialNumber;
+        sessionStorage.CartSerialnumber = data.response.CartSerialNumber;
+        sessionStorage.LogsSerialnumber = data.response.LogsSerialNumber;
+        $scope.logs.push(data.logs);
+        $scope.shoppingCartText = "Your Cart ID:" + sessionStorage.groupSerialNumber;
+        $scope.$apply();
+       });
+
+
     socket.on('catalog', function (data) {
       console.log('received catalog');
         $scope.catalog = data.catalog;
@@ -46,10 +71,16 @@ app.controller("myCtrl", function($scope,$http) {
        });
 
     socket.on('join', function (data) {
-      console.log('new user joined');
-        $scope.logs.push(''+data.user+' joined the group cart');
+        console.log('new user joined');
+        $scope.logs.push(data.logs);
         $scope.$apply();
        });
+
+    socket.on('joinGroupCart', function (data) {
+        sessionStorage.groupSerialNumber = data.response.SerialNumber;
+        sessionStorage.CartSerialnumber = data.response.CartSerialNumber;
+        sessionStorage.LogsSerialnumber = data.response.LogsSerialNumber;
+        });
 
     socket.on('left', function (data) {
       console.log('new user joined');
@@ -63,9 +94,9 @@ app.controller("myCtrl", function($scope,$http) {
         $scope.logs.push(data.logs);
         calculateTotal();
         $scope.$apply();
-        sessionStorage.cartUuid = data.cartUuid;
-        console.log(sessionStorage.cartUuid);
-       });
+        //sessionStorage.cartUuid = data.cartUuid;
+        //console.log(sessionStorage.cartUuid);
+       });  
 
     socket.on('removePizza', function (data) {
         console.log('message from server' + data.pizzaId + "price: " + data.totalPrice);
@@ -106,10 +137,11 @@ app.controller("myCtrl", function($scope,$http) {
       var products = $scope.products;
       var totalPrice = 0;
       for(var i=0;i<products.length;i++){ 
-        var price = Number((products[i].price).replace("$", ""))
+        var price = Number((products[i].price).replace("$", ""));
         var amount =  price * products[i].quantity;
         totalPrice = totalPrice + amount;
       }
       $scope.totalPrice = "$" + totalPrice;
     }
 });
+
