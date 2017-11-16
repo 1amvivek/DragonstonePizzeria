@@ -23,10 +23,6 @@ var mongodb_database = "cmpe281"
 var mongodb_collection = "redistest"
 var i = 0
 var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3}
-<<<<<<< Updated upstream
-=======
-//cassandra_server
->>>>>>> Stashed changes
 
 type (
 	// User represents the structure of our resource
@@ -54,11 +50,9 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/orders/{order_id}", getHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
-<<<<<<< Updated upstream
 	mx.HandleFunc("/order/{order_id}", deleteHandler(formatter)).Methods("DELETE")
-=======
 	mx.HandleFunc("/order", deleteHandler(formatter)).Methods("DELETE")
->>>>>>> Stashed changes
+
 }
 
 func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
@@ -336,7 +330,6 @@ func deleteHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-<<<<<<< Updated upstream
 func putHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
@@ -371,7 +364,6 @@ func putHandler(formatter *render.Render) http.HandlerFunc {
 			updateHelper(value, user)
 		}
 
-=======
 
 func deleteHandler(formatter *render.Render) http.HandlerFunc {  
     return func(w http.ResponseWriter, req *http.Request) {
@@ -457,6 +449,5 @@ func putHandler(formatter *render.Render) http.HandlerFunc {
     	fmt.Println("Some Random error")
     	return
     	}
->>>>>>> Stashed changes
 	}
 }
