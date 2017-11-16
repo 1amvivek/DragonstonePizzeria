@@ -7,21 +7,26 @@ var client = new Client();
 var request = require("request");
 
 //sample REST API URL and arguments
-var cartApiGetUrl = "http://localhost:9090/v1/starbucks/orders";
-var cartApiPostUrl = "http://localhost:9090/v1/starbucks/order";
+var usersApiGetUrl = "http://localhost:3000/orders/{SerialNumber}";
+var usersApiPostUrl = "http://localhost:3000/order";
+var usersApiPutUrl = "http://localhost:3000/order";
 //change the data to respective post data
-var CartPostArgs = {
+var usersPostArgs = {
           data: {
-                  location: "take-out",
-                  items: [
-                    {
-                      qty: 1,
-                      name: "latte",
-                      milk: "whole",
-                      size: "large"
-                    }
-                  ]
+                 "name":"test group cart",
+                 "owner":"Arun Ram",
+                 "users":"Arun Ram",
+                 "cartserialnumber":"12345678",
+                 "logsserialnumber":"23456179"
                 },
+          headers: { "Content-Type": "application/json" }
+  };
+
+var usersPutArgs = {
+          data: {
+                 "SerialNumber":"123456789",
+                 "users":"Arun Ram"
+                 },
           headers: { "Content-Type": "application/json" }
   };
 
@@ -32,6 +37,11 @@ var bodyParser = require('body-parser');
 var path = require('path'); 
 var catalog;
 var connections = [];
+var cartApiPostData;
+var logsApiPostData;
+var groupCartName;
+var owner;
+var Users;
 
 app.use(bodyParser.urlencoded({ extended: true })); 
 
@@ -117,44 +127,83 @@ io.sockets.on('connection', function(socket) {
   
   console.log('new client:' + socket.id);
   connections.push(socket.id); 
-  io.sockets.emit('join', {user : socket.id });
   //sendRestGetRequest(cartApiUrl,123);
     
+  socket.on('createGroupCart', function (socketData) {
+      groupCartName = socketData.groupName;
+      owner = socketData.yourName;
+      //sendRestPostRequest(cartApiPostUrl,cartPostArgs,postCartApiCallBack);
+      postCartApiCallBack();
+     });
+
+  postCartApiCallBack = function(postData){
+      //cartApiPostData = postData;
+      //sendRestPostRequest(logsApiPostUrl,logsPostArgs,postLogsApiCallBack);
+      postLogsApiCallBack();
+  }
+
+  postLogsApiCallBack = function(postData){
+      //logsApiPostData = postData;
+      var args = usersPostArgs;
+      args.name = groupCartName;
+      args.owner = owner;
+      args.users = owner;
+      //args.cartserialnumber = cartApiPostData.CartSerialNumber;
+      //args.logsserialnumber = cartApiPostData.LogsSerialNumber;
+      sendRestPostRequest(usersApiPostUrl,args,postUsersApiCallBack);
+     }
+
+  postUsersApiCallBack = function(postData){
+    var logs = (owner +' created the cart');
+    socket.emit('createGroupCart',{response:postData, logs : logs});
+  }
+
+  socket.on('joinGroupCart', function (socketData) {
+      sendRestGetRequest(usersApiGetUrl,getUsersApiCallBack,socketData);
+    });
+
+  getUsersApiCallBack = function(postData,socketData){
+    var logs = (socketData.yourName +' joined the cart');
+    io.sockets.emit('join', {logs : logs });
+    socket.emit('joinGroupCart',{response:postData});
+    
+    //get json and send to update $scope.products in cart.js
+    //sendRestGetRequest(cartApiGetUrl,getCartApiCallBack,socketData);
+    //get json and send to update $scope.logs in cart.js
+    //sendRestGetRequest(logsApiGetUrl,getLogsApiCallBack,socketData);
+      
+      var args = usersPutArgs;
+      args.data.users = socketData.yourName;
+      args.data.SerialNumber = socketData.SerialNumber;  
+      sendRestPutRequest(usersApiPutUrl,args);
+  }
 
   socket.on('addPizza', function (socketData) {
       //console.log(data.pizzaId);
       //edit args to respective args from selected pizza details
       //selected pizza details is available in socketData
-      var args = CartPostArgs;
-      args.data.location = socketData.pizzaId;
-      args.data.items[0].qty = 1;
-      args.data.items[0].name = socketData.pizzaName;
-      sendRestPostRequest(cartApiPostUrl,args,addPizzaCallBack,socketData);
+      var logs = (socket.id +' added ' + socketData.pizzaName + ' to the cart');
+      io.sockets.emit('addPizza',{pizzaId:socketData.pizzaId,pizzaName : socketData.pizzaName, user : socket.id,logs : logs});
+   
      });
   
-  addPizzaCallBack = function(postData,socketData){
-      console.log("Callback");
-      //replace with uuid variable in post json response data
-      console.log("uuid : " + postData.id);
-      var logs = (socket.id +' added ' + socketData.pizzaName + ' to the cart');
-      io.sockets.emit('addPizza',{pizzaId:socketData.pizzaId,pizzaName : socketData.pizzaName, user : socket.id,cartUuid : postData.id,logs : logs});
-  }
+  socket.on('addQuantity', function (socketData) {
+      //console.log(socketData.pizzaId);
+      //todo: rest call to golang pizza api var args = CartPutArgs;
+      
+    io.sockets.emit('addQuantity', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id});   
+   
+    });
+
   socket.on('removePizza', function (socketData) {
-      console.log(socketData.pizzaId);
-      //todo: rest call to golang pizza api
+      //console.log(socketData.pizzaId);
+      //todo: rest call to golang pizza 
       io.sockets.emit('removePizza', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id });
    
     });
 
-  socket.on('addQuantity', function (socketData) {
-      console.log(socketData.pizzaId);
-      //todo: rest call to golang pizza api
-      io.sockets.emit('addQuantity', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id });
-   
-    });
-
   socket.on('reduceQuantity', function (socketData) {
-      console.log(socketData.pizzaId);
+      //console.log(socketData.pizzaId);
       //todo: rest call to golang pizza api
       io.sockets.emit('reduceQuantity', { pizzaId: socketData.pizzaId,pizzaName : socketData.pizzaName,user : socket.id });
    
@@ -197,30 +246,46 @@ connections.splice(index, 1);
 }
 
 
-function sendRestGetRequest(url,uuid){
+function sendRestGetRequest(url,callback,socketData){
 // direct way 
+url = url.replace('{SerialNumber}',socketData.SerialNumber);
+console.log(url);
 client.get(url, function (data, response) {
     // parsed response body as js object 
-    console.log(data);
-
+    //console.log(data);
+    callback(data,socketData);
     // raw response 
     //console.log(response);
 });
 
 };
 
-function sendRestPostRequest(url,args,callback,socketData){
+function sendRestPostRequest(url,args,callback){
 // direct way 
 console.log(url);
 console.log(args);
 client.post(url,args, function (data, response) {
     // parsed response body as js object 
-    console.log(data);
+    //console.log(data);
     //replace with uuid varibale returned in post json response
-    callback(data,socketData);
+    callback(data);
     // raw response 
     //console.log(response);
 });
 
+};
+
+function sendRestPutRequest(url,args){
+// direct way 
+console.log(url);
+console.log(args);
+client.put(url,args, function (data, response) {
+    // parsed response body as js object 
+    console.log(data);
+    //replace with uuid varibale returned in post json response
+    //callback(data,socketData);
+    // raw response 
+    //console.log(response);
+});
 
 };
