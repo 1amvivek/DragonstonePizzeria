@@ -26,10 +26,15 @@ var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3}
 
 type (
 	// User represents the structure of our resource
-	User struct {
-		SerialNumber string `json: "id"`
-		Name         string `json: "name"`
-		Clock        int    `json: "clock`
+	Product struct {
+		id    int    `json: "id"`
+		name  string `json: "name"`
+		price int    `json: "price"`
+	}
+	Cart struct {
+		SerialNumber string    `json: "SerialNumber"`
+		Products     []Product `json: "products"`
+		Clock        int       `json: "clock`
 	}
 )
 
@@ -48,9 +53,9 @@ func NewServer() *negroni.Negroni {
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/orders/{order_id}", getHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/order", postHandler(formatter)).Methods("POST")
-	mx.HandleFunc("/order", putHandler(formatter)).Methods("PUT")
-	mx.HandleFunc("/order/{order_id}", deleteHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("/orders", postHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/orders/{order_id}", putHandler(formatter)).Methods("PUT")
+	mx.HandleFunc("/orders/{order_id}/{product_id}", deleteHandler(formatter)).Methods("DELETE")
 }
 
 func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
@@ -61,9 +66,9 @@ func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
 
 // Helper Functions
 
-func getFromMongo(session *mgo.Session, serialNumber string) User {
+func getFromMongo(session *mgo.Session, serialNumber string) Cart {
 
-	var result User
+	var result Cart
 	//get from mongo
 	if session != nil {
 		c := session.DB(mongodb_database).C(mongodb_collection)
@@ -78,8 +83,8 @@ func getFromMongo(session *mgo.Session, serialNumber string) User {
 
 }
 
-func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, bool, User) {
-	var result User
+func connectToRedis(redis_connect string, serialNumber string) (*redis.Client, bool, Cart) {
+	var result Cart
 	conn, err := redis.Dial("tcp", redis_connect)
 	if err != nil {
 		log.Fatal("redis failed to connect")
@@ -115,20 +120,20 @@ func getNodes(uuid int) []string {
 	}
 }
 
-func updateHelper(server_val string, user User) {
+func updateHelper(server_val string, cart Cart) {
 	s := getSession(server_val)
 	if s != nil {
 		defer s.Close()
-		fmt.Println("Updating the user")
-		var current User
+		fmt.Println("Updating the cart")
+		var current Cart
 		// It wont update the data from redis and mongo at the same time, as the server_val is not properly set. Hence we have to run update command again.
 		c := s.DB(mongodb_database).C(mongodb_collection)
-		err := c.Find(bson.M{"serialnumber": user.SerialNumber}).One(&current)
+		err := c.Find(bson.M{"serialnumber": cart.SerialNumber}).One(&current)
 		if err != nil {
 			fmt.Println("no object to update")
 			return
 		}
-		err2 := c.Update(bson.M{"serialnumber": user.SerialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": (current.Clock + 1)}})
+		err2 := c.Update(bson.M{"serialnumber": cart.SerialNumber}, bson.M{"$set": bson.M{"products": cart.Products, "clock": (current.Clock + 1)}})
 
 		if err2 != nil {
 			fmt.Println("Some Random error")
@@ -137,15 +142,21 @@ func updateHelper(server_val string, user User) {
 	}
 }
 
-func deleteHelper(server_val string, serialNumber string) {
+func deleteHelper(server_val string, serialNumber string, pid int) {
 	s := getSession(server_val)
 	if s != nil {
 		defer s.Close()
-		fmt.Println("Deleting the user")
-		user := getFromMongo(s, serialNumber)
+		fmt.Println("Deleting the cart")
+		cart := getFromMongo(s, serialNumber)
+
+		for split, product := range cart.Products {
+			if product.id == pid {
+				cart.Products = append(cart.Products[:split], cart.Products[(split+1):])
+			}
+		}
 		//deleting in mongo
 		c := s.DB(mongodb_database).C(mongodb_collection)
-		err2 := c.Update(bson.M{"serialnumber": serialNumber}, bson.M{"$set": bson.M{"name": user.Name, "clock": -1}})
+		err2 := c.Update(bson.M{"serialnumber": serialNumber}, bson.M{"$set": bson.M{"products": cart.Products, "clock": -1}})
 
 		if err2 != nil {
 			fmt.Println("Some Random error")
@@ -154,14 +165,14 @@ func deleteHelper(server_val string, serialNumber string) {
 
 }
 
-func postHelper(server_val string, user1 User) {
+func postHelper(server_val string, cart Cart) {
 	s := getSession(server_val)
 	if s != nil {
 		defer s.Close()
 
 		c := s.DB(mongodb_database).C(mongodb_collection)
 
-		err6 := c.Insert(user1)
+		err6 := c.Insert(cart)
 
 		if err6 != nil {
 			if mgo.IsDup(err6) {
@@ -171,7 +182,7 @@ func postHelper(server_val string, user1 User) {
 			}
 
 			//ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
-			log.Println("Failed insert user: ", err6)
+			log.Println("Failed insert cart: ", err6)
 			return
 		}
 	}
@@ -212,7 +223,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		var serialNumber string = params["order_id"]
 		cacheFlag := false
 		var connections [10]*mgo.Session
-		var objects [10]User
+		var objects [10]Cart
 		//connect to redis
 		conn, cacheFlag, name := connectToRedis(redis_connect, serialNumber)
 		serialNumberInt, err1 := strconv.Atoi(serialNumber)
@@ -221,7 +232,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 		}
 		if cacheFlag {
 			fmt.Println("The values are fetched from Mongo")
-			var result User
+			var result Cart
 			max := 0
 			servers := getNodes(serialNumberInt)
 			for index, value := range servers {
@@ -240,7 +251,7 @@ func getHandler(formatter *render.Render) http.HandlerFunc {
 				if object.Clock != result.Clock {
 					if connections[index] != nil {
 						c := connections[index].DB(mongodb_database).C(mongodb_collection)
-						err2 := c.Update(bson.M{"serialnumber": result.SerialNumber}, bson.M{"$set": bson.M{"name": result.Name, "clock": (result.Clock)}})
+						err2 := c.Update(bson.M{"serialnumber": result.SerialNumber}, bson.M{"$set": bson.M{"products": result.Products, "clock": (result.Clock)}})
 						if err2 != nil {
 							fmt.Println("Some Random error")
 							return
@@ -268,9 +279,9 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 
 		//get mongodb connection
 
-		var user1 User
+		var cart Cart
 		decoder := json.NewDecoder(req.Body)
-		err5 := decoder.Decode(&user1)
+		err5 := decoder.Decode(&cart)
 		if err5 != nil {
 			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
 			return
@@ -281,14 +292,14 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 		var resp1 = fmt.Sprintf("{'uuid' : %d }", uuid)
 		Jsonvalue, err5 := json.Marshal(resp1)
 		servers := getNodes(uuid)
-		user1.SerialNumber = strconv.Itoa(uuid)
-		user1.Clock = 1
+		cart.SerialNumber = strconv.Itoa(uuid)
+		cart.Clock = 1
 		for _, value := range servers {
-			postHelper(value, user1)
+			postHelper(value, cart)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Location", req.URL.Path+"/"+user1.SerialNumber)
+		w.Header().Set("Location", req.URL.Path+"/"+cart.SerialNumber)
 		w.WriteHeader(http.StatusCreated)
 		w.WriteHeader(200)
 
@@ -303,7 +314,10 @@ func deleteHandler(formatter *render.Render) http.HandlerFunc {
 		//get variables
 		params := mux.Vars(req)
 		var serialNumber string = params["order_id"]
-
+		productid, err := strconv.Atoi(params["product_id"])
+		if err != nil {
+			fmt.Println("could not convert serialnumber to int")
+		}
 		//connect to redis
 		conn, cacheFlag, _ := connectToRedis(redis_connect, serialNumber)
 
@@ -323,7 +337,7 @@ func deleteHandler(formatter *render.Render) http.HandlerFunc {
 		// It wont delete the data from redis and mongo, as the server_val is not properly set. Hence we have to run del again.
 		servers := getNodes(serialNumberInt)
 		for _, value := range servers {
-			deleteHelper(value, serialNumber)
+			deleteHelper(value, serialNumber, productid)
 		}
 	}
 }
@@ -331,10 +345,10 @@ func deleteHandler(formatter *render.Render) http.HandlerFunc {
 func putHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		var user User
+		var product Product
 		//get mongodb connection
 		decoder := json.NewDecoder(req.Body)
-		err1 := decoder.Decode(&user)
+		err1 := decoder.Decode(&product)
 
 		if err1 != nil {
 			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
@@ -342,12 +356,12 @@ func putHandler(formatter *render.Render) http.HandlerFunc {
 			return
 		}
 
-		serialNumber, err := strconv.Atoi(user.SerialNumber)
+		serialNumber, err := strconv.Atoi(cart.SerialNumber)
 		if err != nil {
 			fmt.Println("could not convert serialnumber to int")
 		}
 		//connect to redis
-		conn, _, name := connectToRedis(redis_connect, user.SerialNumber)
+		conn, _, name := connectToRedis(redis_connect, cart.SerialNumber)
 
 		//deleting in redis
 		if name.SerialNumber != "" {
@@ -359,7 +373,7 @@ func putHandler(formatter *render.Render) http.HandlerFunc {
 		}
 		servers := getNodes(int(serialNumber))
 		for _, value := range servers {
-			updateHelper(value, user)
+			updateHelper(value, cart)
 		}
 
 	}
