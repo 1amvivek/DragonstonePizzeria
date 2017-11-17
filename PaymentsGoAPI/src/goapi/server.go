@@ -25,11 +25,17 @@ var i = 0
 var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3}
 
 type (
-	// User represents the structure of our resource
-	User struct {
+	// Payment represents the structure of our resource
+	Payment struct {
 		SerialNumber string `json: "id"`
-		Name         string `json: "name"`
-		Clock        int    `json: "clock`
+ 		Clock        int    `json: "clock`
+		UserName     string `json: "name"`
+		EmailId      string `json: "name"`
+		Address      string `json: "name"`
+                Zipcode      string `json: "name"`
+                Amount       string `json: "id"`
+		CartSerialNumber string `json: "id"`
+		
 	}
 )
 
