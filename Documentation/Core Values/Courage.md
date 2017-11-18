@@ -61,6 +61,12 @@ Here, courage was demonstrated in the following instances:
 * In a demonstration of courage, **the team was able to use docker-compose yaml to set up the test environment on local machines with ease**   
 * **With face to face open communication and courageous collaboration**, the team was able to integrate different independently tested modules with ease.   
   
+  
+## Courage shown in Week 8
+* The integration phase of the project went off without a hitch because of **open communication between team members** to conclude the last bit of the project.
+* **Asking tough questions during integration** ensured that bugs were caught and fixed early with minimal impact.
+* Team members were courageously able to **request and find time for colocated collaboration** which ensured steady progress towards building the complete project.
+  
    
 ## References
 * [Agie Manifesto Principles](http://agilemanifesto.org/principles.html)

@@ -344,22 +344,18 @@ func deleteHandler(formatter *render.Render) http.HandlerFunc {
 
 func putHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
+		params := mux.Vars(req)
+		var serialNumber string = params["order_id"]
 		var product Product
 		//get mongodb connection
 		decoder := json.NewDecoder(req.Body)
 		err1 := decoder.Decode(&product)
-
 		if err1 != nil {
 			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
 			fmt.Println(err1)
 			return
 		}
 
-		serialNumber, err := strconv.Atoi(cart.SerialNumber)
-		if err != nil {
-			fmt.Println("could not convert serialnumber to int")
-		}
 		//connect to redis
 		conn, _, name := connectToRedis(redis_connect, cart.SerialNumber)
 
@@ -372,6 +368,7 @@ func putHandler(formatter *render.Render) http.HandlerFunc {
 			fmt.Println("There aren't any values in Redis")
 		}
 		servers := getNodes(int(serialNumber))
+		cart.Products = append(cart.Products, product)
 		for _, value := range servers {
 			updateHelper(value, cart)
 		}
