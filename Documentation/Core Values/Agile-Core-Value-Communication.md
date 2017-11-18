@@ -84,5 +84,15 @@ In Week 7 of the development process:
 
 * The team members discussed the issues they were facing while working on their modules. We sat together and tried to discuss how to resolve the issues.
 
+## Updates from Week 8
+In Week 8 of the development process:
+* The team had a weekly Scrum meeting where we discussed the progress of the Project.
+
+* The team members had an internal review on each other's work and had a discussion about the progress made. The team members explained what each person had worked on during the week.
+
+* The team members discussed the issues they were facing while working on their modules. We sat together and tried to discuss how to resolve the issues.
+
+* We also discussed the issues related to merging the code.
+
 ## References:
 * [Agile Manifesto Principles](http://agilemanifesto.org/principles.html)
