@@ -145,3 +145,24 @@
 * Discussed efficient inplementationand time management to complete the project well before deadline.
 
 
+# Week 8
+
+<b>Date:</b> 11/15/2017  
+<b>Time:</b> 1:00 pm  
+<b>Place:</b> Student Union,San Jose State University
+
+<b>Members Present: </b> 
+1. Arun  
+2. Pranav 
+3. Raksha  
+4. Renu  
+5. Vivek
+
+# Meeting Purpose:
+
+* Decided about the modules and functionalities that are completed and tested this week.
+* Discussed about the challenges that were faced by team members during final week of implementation.
+* Efficiently set some targets for every team member to achieve by final week end.
+* Started validating all the end-points for front-end and back-end before final demo or presentation.
+
+
