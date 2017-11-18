@@ -69,4 +69,14 @@ The following are the core agile value of Commitment noticed in Week 7 of develo
 
 * The team members put lot of effort in discussing each others solutions and made a clear understanding of each person's moduel to others.
 
+## Commitment shown in Week 8
+
+The following are the core agile value of Commitment noticed in Week 8 of development:
+
+* In the week 8 of development and project discussions, everyone put lot of efforts in integrating their own modules to reach the goal point.
+
+* The team members were able to coordinte well in every project discussions and input their ideas so well.
+
+* The team members are putting lot of efforts to work on further improvements and efficiently manage the code to achieve goals, which clearly shows strong commitment to work together as a team.
+
 
