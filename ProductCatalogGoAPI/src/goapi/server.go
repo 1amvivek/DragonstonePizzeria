@@ -31,6 +31,11 @@ type (
 		Name         string `json: "name"`
 		Clock        int    `json: "clock`
 	}
+	Product struct {
+		id    int    `json: "id"`
+		name  string `json: "name"`
+		price int    `json: "price"`
+	}
 )
 
 // NewServer configures and returns a Server.
