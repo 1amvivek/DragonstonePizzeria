@@ -50,3 +50,9 @@ Highest business value features are delivered first to the customer by developme
 * The team reviewed the other team members modules and gave feedback to each other.
 * The team coordinated with each other for the dependencies between their modules and discussed about the solutions.
 * The team shared the challenges they faced in the stand up and got help from other members.
+
+**Updates from week 8**  
+
+* Each team member completed the code for their respective modules and demoed to the others and got feedbacks.
+* During integration, the rest request structures to others modules were tweeked a little based on the feedbacks.
+* Team members gave overall feedbacks for the entire project during the reterospective.
