@@ -26,14 +26,15 @@ var servers = []string{mongodb_server1, mongodb_server2, mongodb_server3}
 
 type (
 	// Payment represents the structure of our resource
-	Payment struct {
+	User struct {
 		SerialNumber string `json: "id"`
  		Clock        int    `json: "clock`
-		UserName     string `json: "name"`
+		Name     string `json: "name"`
 		EmailId      string `json: "name"`
 		Address      string `json: "name"`
-                Zipcode      string `json: "name"`
-                Amount       string `json: "id"`
+        Zipcode      string `json: "name"`
+        Amount       string `json: "id"`
+        PaymentStatus    string  
 		CartSerialNumber string `json: "id"`
 		
 	}
@@ -274,9 +275,9 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 
 		//get mongodb connection
 
-		var user1 User
+		var pay1 User
 		decoder := json.NewDecoder(req.Body)
-		err5 := decoder.Decode(&user1)
+		err5 := decoder.Decode(&pay1)
 		if err5 != nil {
 			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
 			return
@@ -287,14 +288,14 @@ func postHandler(formatter *render.Render) http.HandlerFunc {
 		var resp1 = fmt.Sprintf("{'uuid' : %d }", uuid)
 		Jsonvalue, err5 := json.Marshal(resp1)
 		servers := getNodes(uuid)
-		user1.SerialNumber = strconv.Itoa(uuid)
-		user1.Clock = 1
+		pay1.SerialNumber = strconv.Itoa(uuid)
+		pay1.Clock = 1
 		for _, value := range servers {
-			postHelper(value, user1)
+			postHelper(value, pay1)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Location", req.URL.Path+"/"+user1.SerialNumber)
+		w.Header().Set("Location", req.URL.Path+"/"+pay1.SerialNumber)
 		w.WriteHeader(http.StatusCreated)
 		w.WriteHeader(200)
 
