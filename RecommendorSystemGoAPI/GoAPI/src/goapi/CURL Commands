@@ -1,0 +1,12 @@
+CURL Commands:
+
+POST:
+curl -X POST -d '{}' localhost:3000/order
+curl -X POST -d '{"cart": "Beer,Bread,Diaper,Eggs" }' localhost:3000/order
+curl -X POST -d '{"cart": "Beer,Coke,Diaper,Milk" }' localhost:3000/order
+curl -X POST -d '{"cart": "Beer,Bread,Diaper,Milk" }' localhost:3000/order
+curl -X POST -d '{"cart": "Bread,Coke,Diaper,Milk" }' localhost:3000/order
+
+
+PUT:
+curl -X PUT -d '{"serialnumber" : "6129484611666145821", "cart": "Beer" }' localhost:3000/order
