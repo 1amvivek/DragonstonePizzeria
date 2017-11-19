@@ -45,3 +45,9 @@ The core agile value of respect is shown in the following instances during week 
 * During the team discussions, team members helped each other in resolving several bugs that were there in the project. 
 
 * The team collaborated well and started to put more time to finish the project within the deadline.
+
+## Respect shown in Week 7
+
+* All the team members have finished their part successfully and integrated with everyone's code. This process went smoothly as the team mates collaborated and discussed all the issues beforehand.
+
+* Despite having hackathon, the team managed to balance both the things and achieved extra credit for the hackathon. This shows their level of respect given to the project and assignments. 
